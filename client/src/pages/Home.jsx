@@ -10,8 +10,8 @@ const Home = () => {
         <Link to="/auth" className=" font-bold">
           Authentication
         </Link>
-        <Link to="/" className=" font-bold">
-          Chat App
+        <Link to="/grocery" className=" font-bold">
+          Grocery
         </Link>
       </nav>
     </main>

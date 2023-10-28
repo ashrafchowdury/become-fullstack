@@ -29,7 +29,7 @@ const Auth = () => {
   }, []);
 
   return (
-    <main className="xl:w-[1250px] lg:w-[1020px] md:w-[720px] mx-auto">
+    <>
       <nav className="flex items-center justify-between h-[100px]">
         <h1 className="text-xl font-semibold">Authentication</h1>
         <div className="flex items-center space-x-3">
@@ -77,7 +77,7 @@ const Auth = () => {
           </div>
         )}
       </section>
-    </main>
+    </>
   );
 };
 
