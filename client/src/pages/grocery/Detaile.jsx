@@ -3,18 +3,19 @@ import Nav from "./components/Nav";
 import Product from "./components/Product";
 import { useProduct } from "./context/ProductContext";
 import { useLocation } from "react-router-dom";
-const Detaile = () => {
-  const [productCounter, setProductCounter] = useState(0);
-  const { products } = useProduct();
-  const route = useLocation();
 
-  
+const Detaile = () => {
+  const [productCounter, setProductCounter] = useState(1);
+  const { products, addCartProduct } = useProduct();
+  const route = useLocation();
+  const productId = route.pathname.split("/")[3];
+
   return (
     <>
       <Nav />
       <main className="flex flex-col md:flex-row md:px-0 md:gap-6 md:py-20 items-center md:justify-center lg:px-14 lg:gap-16">
         {products
-          .filter((item) => route.pathname.split("/")[3] == item._id)
+          .filter((item) => productId == item._id)
           .map((item) => (
             <>
               <div className="relative md:w-full md:max-w-[500px]">
@@ -55,14 +56,16 @@ const Detaile = () => {
                 <div className="flex flex-col justify-center items-center gap-4 md:flex-row">
                   <div className="flex w-full bg-slate-200 justify-between items-center px-6 py-2 rounded-xl mt-2 md:w-1/3 md:px-3 md:mt-0">
                     <button
-                      onClick={() => setProductCounter(productCounter - 1)}
+                      onClick={() =>
+                        productCounter > 1 &&
+                        setProductCounter(productCounter - 1)
+                      }
                       className="font-bold text-2xl pb-1"
+                      disabled={productCounter == 1}
                     >
                       -
                     </button>
-
                     <div className="font-bold">{productCounter}</div>
-
                     <button
                       onClick={() => setProductCounter(productCounter + 1)}
                       className="font-bold text-2xl w-[1rem] pb-1"
@@ -71,7 +74,13 @@ const Detaile = () => {
                     </button>
                   </div>
 
-                  <button className="w-full bg-black text-white py-4 rounded-xl font-bold shadow-[0_10px_30px_-12px] shadow-orange md:w-2/3">
+                  <button
+                    className="w-full bg-black text-white py-4 rounded-xl font-bold shadow-[0_10px_30px_-12px] shadow-orange md:w-2/3"
+                    onClick={() => {
+                      addCartProduct(item, productCounter);
+                      setProductCounter(1);
+                    }}
+                  >
                     <div className="flex gap-4 justify-center">
                       <svg
                         width="22"
@@ -93,8 +102,15 @@ const Detaile = () => {
           ))}
       </main>
 
-      <h2 className="font-bold text-2xl mt-16 mb-8">Related Prodcuts</h2>
-      <section className="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8"></section>
+      <h2 className="font-bold text-2xl mt-24 mb-8">Related Prodcuts</h2>
+      <section className="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8 !mb-12">
+        {products
+          .filter((item) => productId !== item._id)
+          .slice(0, 4)
+          .map((item) => (
+            <Product product={item} />
+          ))}
+      </section>
     </>
   );
 };

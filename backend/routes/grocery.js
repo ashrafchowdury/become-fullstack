@@ -1,7 +1,6 @@
 const express = require("express");
 const app = express();
-const PRODUCTS = require("../models/grocerySchema");
-
+const { PRODUCTS, CART } = require("../models/grocerySchema");
 require("../db/groceryDB");
 
 app.use(express.json());
@@ -20,6 +19,35 @@ app.get("/products", async (req, res) => {
   }
 });
 
-app.post("/cart", async (req, res) => {});
+app.get("/cart", async (req, res) => {
+  try {
+    const data = await CART.find();
+    res.status(200).json(data);
+  } catch (error) {
+    res.status(400).json({ message: "error" });
+  }
+});
+
+app.post("/cart", async (req, res) => {
+  const product = req.body;
+  try {
+    const data = await CART.insertMany({ ...product });
+    res.status(200).json(data);
+  } catch (error) {
+    res.status(400).json({ message: "error" });
+  }
+});
+
+app.delete("/cart", async (req, res) => {
+  try {
+    await CART.findByIdAndDelete({
+      _id: req.body.id,
+    });
+    const data = await CART.find();
+    res.status(200).json(data);
+  } catch (error) {
+    res.status(400).json({ message: "error" });
+  }
+});
 
 app.listen(5000, () => console.log("Server Connected..."));
