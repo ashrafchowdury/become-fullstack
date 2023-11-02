@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 const Login = () => {
-  const handleUserAuthData = async (event) => {
+  const handleUserAuthData = async (event: any) => {
     event.preventDefault();
     const email = event.target[0].value;
     const password = event.target[1].value;

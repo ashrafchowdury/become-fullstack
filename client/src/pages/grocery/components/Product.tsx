@@ -1,7 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom';
 
-const Product = ({ product }) => {
+const Product = ({ product }: any) => {
   return (
     <Link
       key={product._id}

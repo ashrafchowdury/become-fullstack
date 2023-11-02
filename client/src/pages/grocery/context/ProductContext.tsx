@@ -1,11 +1,11 @@
 import { useState, useEffect, createContext, useContext, lazy } from "react";
 
-export const ProductContext = createContext();
+export const ProductContext = createContext(null);
 export const useProduct = () => useContext(ProductContext);
 
-const ProductContextProvider = ({ children }) => {
-  const [products, setProducts] = useState([]);
-  const [cart, setCart] = useState([]);
+const ProductContextProvider = ({ children }: any) => {
+  const [products, setProducts] = useState<any>([]);
+  const [cart, setCart] = useState<any>([]);
 
   const getAllProducts = async () => {
     const data = await fetch("/products");
@@ -19,7 +19,7 @@ const ProductContextProvider = ({ children }) => {
     setCart(res);
   };
 
-  const addCartProduct = async (item, quantity) => {
+  const addCartProduct = async (item: any, quantity: any) => {
     const data = await fetch("/cart", {
       method: "POST",
       headers: {
@@ -31,7 +31,7 @@ const ProductContextProvider = ({ children }) => {
     setCart([...cart, res]);
   };
 
-  const deleteCartProduct = async (id) => {
+  const deleteCartProduct = async (id: any) => {
     const data = await fetch("/cart", {
       method: "DELETE",
       headers: {
@@ -47,7 +47,7 @@ const ProductContextProvider = ({ children }) => {
     getAllProducts();
   }, []);
 
-  const value = {
+  const value: any = {
     products,
     setProducts,
     getAllCartProducts,

@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 
-function AddTodo({ addTodo }) {
+function AddTodo({ addTodo }: any) {
   const [newTodo, setNewTodo] = useState("");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: any) => {
     e.preventDefault();
     if (newTodo.trim() !== "") {
       addTodo({

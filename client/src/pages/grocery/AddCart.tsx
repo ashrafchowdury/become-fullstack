@@ -1,17 +1,18 @@
 import React, { useState, useEffect } from "react";
 import Nav from "./components/Nav";
+import Order from "./components/Order";
 import { Link } from "react-router-dom";
 import { useProduct } from "./context/ProductContext";
 
 const AddCart = () => {
-  const { getAllCartProducts, deleteCartProduct, cart } = useProduct();
+  const { getAllCartProducts, deleteCartProduct, cart }: any = useProduct();
   useEffect(() => {
     getAllCartProducts();
   }, []);
 
   const productAmount = () => {
     return cart.reduce(
-      (total, product) =>
+      (total: any, product: any) =>
         total + Number(product?.price?.substring(1)) * product?.quantity,
       0
     );
@@ -25,7 +26,7 @@ const AddCart = () => {
       <section className="flex items-start justify-between mb-20">
         <div className="mt-8 w-[720px]">
           <ul role="list" className="-my-6 divide-y divide-gray-200">
-            {cart.map((product) => (
+            {cart.map((product: any) => (
               <li key={product._id} className="flex py-6">
                 <div className="h-20 w-20 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
                   <img
@@ -83,11 +84,8 @@ const AddCart = () => {
             Shipping and taxes calculated at checkout.
           </p>
           <div className="mt-6">
-            <button
-              className="w-full flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700"
-            >
-              Checkout
-            </button>
+            <Order />
+
           </div>
           <div className="mt-6 flex justify-center text-center text-sm text-gray-500">
             <p>

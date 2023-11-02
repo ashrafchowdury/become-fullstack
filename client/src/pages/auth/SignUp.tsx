@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 const SignUp = () => {
-  const handleUserAuthData = async (event) => {
+  const handleUserAuthData = async (event: any) => {
     event.preventDefault();
     const name = event.target[0].value;
     const email = event.target[1].value;
@@ -13,7 +13,7 @@ const SignUp = () => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({ name, email, password }),
-    })
+    });
     const res = await data.json();
     console.log(res);
     event.target[0].value = "";

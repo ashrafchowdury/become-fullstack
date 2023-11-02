@@ -6,7 +6,7 @@ import { useLocation } from "react-router-dom";
 
 const Detaile = () => {
   const [productCounter, setProductCounter] = useState(1);
-  const { products, addCartProduct } = useProduct();
+  const { products, addCartProduct }: any = useProduct();
   const route = useLocation();
   const productId = route.pathname.split("/")[3];
 
@@ -15,8 +15,8 @@ const Detaile = () => {
       <Nav />
       <main className="flex flex-col md:flex-row md:px-0 md:gap-6 md:py-20 items-center md:justify-center lg:px-14 lg:gap-16">
         {products
-          .filter((item) => productId == item._id)
-          .map((item) => (
+          .filter((item: any) => productId == item._id)
+          .map((item: any) => (
             <>
               <div className="relative md:w-full md:max-w-[500px]">
                 <img src={item.imageSrc} className=" rounded-xl" />
@@ -105,9 +105,9 @@ const Detaile = () => {
       <h2 className="font-bold text-2xl mt-24 mb-8">Related Prodcuts</h2>
       <section className="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8 !mb-12">
         {products
-          .filter((item) => productId !== item._id)
+          .filter((item: any) => productId !== item._id)
           .slice(0, 4)
-          .map((item) => (
+          .map((item: any) => (
             <Product product={item} />
           ))}
       </section>

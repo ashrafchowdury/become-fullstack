@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
 const Auth = () => {
-  const [data, setData] = useState({});
+  const [data, setData] = useState<any>({});
   const [isLoading, setIsLoading] = useState(true);
 
   const getUserProfile = async () => {

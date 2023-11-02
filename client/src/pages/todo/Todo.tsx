@@ -3,7 +3,7 @@ import TodoItem from "./components/TodoItem";
 import AddTodo from "./components/AddTodo";
 
 const Todo = () => {
-  const [todos, setTodos] = useState([]);
+  const [todos, setTodos] = useState<any>([]);
 
   useEffect(() => {
     const getTodos = async () => {
@@ -19,7 +19,7 @@ const Todo = () => {
   }, []);
 
   // Function to add a new todo
-  const addTodo = async (newTodo) => {
+  const addTodo = async (newTodo: any) => {
     try {
       const data = await fetch("/todos", {
         method: "POST",
@@ -36,7 +36,7 @@ const Todo = () => {
   };
 
   // Function to update a todo
-  const updateTodo = async (id, updatedTodo) => {
+  const updateTodo = async (id: any, updatedTodo: any) => {
     try {
       const data = await fetch("/todos", {
         method: "PUT",
@@ -53,7 +53,7 @@ const Todo = () => {
   };
 
   // Function to delete a todo
-  const deleteTodo = async (id) => {
+  const deleteTodo = async (id: any) => {
     const data = await fetch("/todos", {
       method: "DELETE",
       headers: {
@@ -70,7 +70,7 @@ const Todo = () => {
       <h1 className="text-2xl mb-10">Todo List</h1>
       <AddTodo addTodo={addTodo} />
       <ul className=" w-[500px]">
-        {todos.map((todo) => (
+        {todos.map((todo: any) => (
           <TodoItem
             key={todo._id}
             todo={todo}
