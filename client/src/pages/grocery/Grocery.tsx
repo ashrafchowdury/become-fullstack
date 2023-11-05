@@ -2,7 +2,6 @@ import Nav from "./components/Nav";
 import Product from "./components/Product";
 import { useProduct } from "./context/ProductContext";
 
-
 const Grocery = () => {
   const { products }: any = useProduct();
   return (

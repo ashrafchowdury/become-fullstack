@@ -1,9 +1,16 @@
 import { cn } from "../../../lib/utils";
 
-const CartSummary = ({ className, data }: { className?: string; data: any }) => {
+const CartSummary = ({
+  className,
+  data,
+}: {
+  className?: string;
+  data: any;
+}) => {
   const productAmount = () => {
     return data.reduce(
-      (total: any, product: any) => total + Number(product?.price?.substring(1)) * product?.quantity,
+      (total: any, product: any) =>
+        total + Number(product?.price?.substring(1)) * product?.quantity,
       0
     );
   };
@@ -26,7 +33,9 @@ const CartSummary = ({ className, data }: { className?: string; data: any }) => 
         <p>Total</p>
         <p>${productAmount() + 5 + 8}.00</p>
       </div>
-      <p className="mt-0.5 text-sm text-gray-500">Shipping and taxes calculated at checkout.</p>
+      <p className="mt-0.5 text-sm text-gray-500">
+        Shipping and taxes calculated at checkout.
+      </p>
     </div>
   );
 };

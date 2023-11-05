@@ -9,7 +9,7 @@ import {
   Detaile,
   AddCart,
   ProductContextProvider,
-  Order
+  Order,
 } from "./pages";
 import { ThemeProvider } from "./interfaces/theme/theme-provider";
 import { Toaster } from "./interfaces";
@@ -17,7 +17,12 @@ import { Toaster } from "./interfaces";
 function App() {
   return (
     <main className="xl:w-[1250px] lg:w-[1020px] md:w-[720px] mx-auto">
-      <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+      <ThemeProvider
+        attribute="class"
+        defaultTheme="system"
+        enableSystem
+        disableTransitionOnChange
+      >
         <Routes>
           <Route path="/" element={<Home />} />
 

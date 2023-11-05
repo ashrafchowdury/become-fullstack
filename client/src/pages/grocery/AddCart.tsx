@@ -37,13 +37,18 @@ const AddCart = () => {
             <CartSummary className="w-full" data={cart} />
             <div className="mt-6">
               <Link to="/grocery/order">
-                <Button className="w-full !py-5 font-bold shadow-sm">Checkout</Button>
+                <Button className="w-full !py-5 font-bold shadow-sm">
+                  Checkout
+                </Button>
               </Link>
             </div>
             <div className="mt-6 flex justify-center text-center text-sm text-gray-500">
               <p>
                 or{" "}
-                <Link to="/grocery" className="font-medium text-indigo-600 hover:text-indigo-500">
+                <Link
+                  to="/grocery"
+                  className="font-medium text-indigo-600 hover:text-indigo-500"
+                >
                   Continue Shopping
                   <span aria-hidden="true"> &rarr;</span>
                 </Link>

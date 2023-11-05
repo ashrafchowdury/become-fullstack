@@ -9,4 +9,15 @@ import AddCart from "./grocery/AddCart";
 import Order from "./grocery/Order";
 import ProductContextProvider from "./grocery/context/ProductContext";
 
-export { Home, Todo, SignUp, Login, Auth, Grocery, Detaile, AddCart, ProductContextProvider, Order };
+export {
+  Home,
+  Todo,
+  SignUp,
+  Login,
+  Auth,
+  Grocery,
+  Detaile,
+  AddCart,
+  ProductContextProvider,
+  Order,
+};

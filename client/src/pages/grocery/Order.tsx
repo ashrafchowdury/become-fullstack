@@ -67,29 +67,60 @@ const Order = () => {
           <div className="space-y-3">
             <div className="space-y-2">
               <Label htmlFor="name">Name</Label>
-              <Input name="name" className="px-4 py-2 w-full" value={info.name} onChange={handleInfo} />
+              <Input
+                name="name"
+                className="px-4 py-2 w-full"
+                value={info.name}
+                onChange={handleInfo}
+              />
             </div>
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
-              <Input name="email" className="px-4 py-2 w-full" value={info.email} onChange={handleInfo} />
+              <Input
+                name="email"
+                className="px-4 py-2 w-full"
+                value={info.email}
+                onChange={handleInfo}
+              />
             </div>
             <div className="space-y-2">
               <Label htmlFor="phone">Phone</Label>
-              <Input type="phone" name="phone" className="px-4 py-2 w-full" value={info.phone} onChange={handleInfo} />
+              <Input
+                type="phone"
+                name="phone"
+                className="px-4 py-2 w-full"
+                value={info.phone}
+                onChange={handleInfo}
+              />
             </div>
             <div className="space-y-2">
               <Label htmlFor="address">Address</Label>
-              <Input name="address" className="px-4 py-2 w-full" value={info.address} onChange={handleInfo} />
+              <Input
+                name="address"
+                className="px-4 py-2 w-full"
+                value={info.address}
+                onChange={handleInfo}
+              />
             </div>
 
             <div className="flex items-center space-x-2 w-full">
               <div className="space-y-2 w-full">
                 <Label htmlFor="city">City</Label>
-                <Input name="city" className="px-4 py-2" value={info.city} onChange={handleInfo} />
+                <Input
+                  name="city"
+                  className="px-4 py-2"
+                  value={info.city}
+                  onChange={handleInfo}
+                />
               </div>
               <div className="space-y-2 w-full">
                 <Label htmlFor="city">State</Label>
-                <Input name="state" className="px-4 py-2" value={info.state} onChange={handleInfo} />
+                <Input
+                  name="state"
+                  className="px-4 py-2"
+                  value={info.state}
+                  onChange={handleInfo}
+                />
               </div>
             </div>
           </div>
@@ -98,7 +129,12 @@ const Order = () => {
           <div className="space-y-3">
             <div className="space-y-2">
               <Label htmlFor="card">Name on card</Label>
-              <Input name="name" className="px-4 py-2 w-full" value={payDetile.name} onChange={handlePayDetaile} />
+              <Input
+                name="name"
+                className="px-4 py-2 w-full"
+                value={payDetile.name}
+                onChange={handlePayDetaile}
+              />
             </div>
             <div className="space-y-2">
               <Label htmlFor="number">Card number</Label>
@@ -147,7 +183,10 @@ const Order = () => {
           <div className="w-[480px]">
             <CartSummary className="w-full" data={cart} />
             <div className="mt-6">
-              <Button className="w-full !py-5 font-bold shadow-sm" onClick={handleOrder}>
+              <Button
+                className="w-full !py-5 font-bold shadow-sm"
+                onClick={handleOrder}
+              >
                 Order
               </Button>
             </div>

@@ -59,7 +59,9 @@ const ProductContextProvider = ({ children }: any) => {
     deleteCartProduct,
   };
 
-  return <ProductContext.Provider value={value}>{children}</ProductContext.Provider>;
+  return (
+    <ProductContext.Provider value={value}>{children}</ProductContext.Provider>
+  );
 };
 
 export default ProductContextProvider;

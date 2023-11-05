@@ -54,7 +54,9 @@ app.post("/order", async (req, res) => {
   const order = req.body;
   try {
     const data = await ORDER.insertMany({ ...order });
-    order.items.map(async (item) => await CART.findByIdAndDelete({ _id: item?._id }));
+    order.items.map(
+      async (item) => await CART.findByIdAndDelete({ _id: item?._id })
+    );
     res.status(200).json(data);
   } catch (error) {
     res.status(400).json({ message: "error" });

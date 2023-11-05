@@ -7,7 +7,10 @@ const CartItem = ({ className, data }: { className?: string; data: any }) => {
   return (
     <div key={data._id} className={cn("flex py-6", className)}>
       <div className="h-20 w-20 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
-        <img src={data.imageSrc} className="h-full w-full object-cover object-center" />
+        <img
+          src={data.imageSrc}
+          className="h-full w-full object-cover object-center"
+        />
       </div>
 
       <div className="ml-4 flex flex-1 flex-col">
