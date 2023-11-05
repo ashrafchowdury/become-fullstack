@@ -1,11 +1,13 @@
 import { useState, useEffect, createContext, useContext, lazy } from "react";
+import { useToast } from "../../../interfaces";
 
 export const ProductContext = createContext(null);
-export const useProduct = () => useContext(ProductContext);
+export const useProduct = () => useContext(ProductContext)!;
 
 const ProductContextProvider = ({ children }: any) => {
   const [products, setProducts] = useState<any>([]);
   const [cart, setCart] = useState<any>([]);
+  const { toast } = useToast();
 
   const getAllProducts = async () => {
     const data = await fetch("/products");
@@ -28,6 +30,7 @@ const ProductContextProvider = ({ children }: any) => {
       body: JSON.stringify({ ...item, quantity: quantity }),
     });
     const res = await data.json();
+    toast({ title: `✨ ${item.name} added` });
     setCart([...cart, res]);
   };
 
@@ -56,9 +59,7 @@ const ProductContextProvider = ({ children }: any) => {
     deleteCartProduct,
   };
 
-  return (
-    <ProductContext.Provider value={value}>{children}</ProductContext.Provider>
-  );
+  return <ProductContext.Provider value={value}>{children}</ProductContext.Provider>;
 };
 
 export default ProductContextProvider;

@@ -1,6 +1,6 @@
 const express = require("express");
 const app = express();
-const { PRODUCTS, CART } = require("../models/grocerySchema");
+const { PRODUCTS, CART, ORDER } = require("../models/grocerySchema");
 require("../db/groceryDB");
 
 app.use(express.json());
@@ -44,6 +44,17 @@ app.delete("/cart", async (req, res) => {
       _id: req.body.id,
     });
     const data = await CART.find();
+    res.status(200).json(data);
+  } catch (error) {
+    res.status(400).json({ message: "error" });
+  }
+});
+
+app.post("/order", async (req, res) => {
+  const order = req.body;
+  try {
+    const data = await ORDER.insertMany({ ...order });
+    order.items.map(async (item) => await CART.findByIdAndDelete({ _id: item?._id }));
     res.status(200).json(data);
   } catch (error) {
     res.status(400).json({ message: "error" });
