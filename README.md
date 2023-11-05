@@ -1,4 +1,4 @@
-<img src="https://github.com/ashrafchowddury/become-fullstack/blob/main/public/banner.png" />
+<img src="https://github.com/ashrafchowdury/become-fullstack/blob/main/public/banner.png" />
 
 # Becoming A Fullstack Developer
 
