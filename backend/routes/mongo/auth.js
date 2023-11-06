@@ -1,8 +1,8 @@
 const express = require("express");
 const app = express();
-const AUTH = require("../models/authSchema");
+const AUTH = require("../../models/mongo/authSchema");
 const cookieParser = require("cookie-parser");
-require("../db/authDB");
+require("../../database/mongo/authDB");
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
