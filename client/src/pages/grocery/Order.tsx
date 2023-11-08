@@ -54,8 +54,8 @@ const Order = () => {
         body: JSON.stringify({ items: cart, detaile: info, pay: payDetile }),
       });
       const res = await data.json();
-      res[0]?._id && toast({ title: "Order placed successfully 🥳" });
-      res[0]?._id && naviagete("/grocery");
+      res?._id && toast({ title: "Order placed successfully 🥳" });
+      res?._id && naviagete("/grocery");
     }
   };
   return (

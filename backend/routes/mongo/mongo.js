@@ -15,60 +15,80 @@ connectDB((error) => {
   }
 });
 
+// functions
+const getData = (collection, res) => {
+  const data = [];
+  database
+    .collection(collection)
+    .find()
+    .forEach((item) => data.push(item))
+    .then(() => {
+      res.status(200).json(data);
+    })
+    .catch((error) => {
+      res.status(500).json({ message: "error" });
+    });
+};
+
 // routes
 app.get("/", (req, res) => {
   res.status(200).json({ message: "success" });
 });
 
-app.get("/products", async (req, res) => {
-  try {
-    const data = await database.collection("products");
-    res.status(200).json(data);
-  } catch (error) {
-    console.log(error);
-    res.status(400).json({ message: "error" });
-  }
+app.get("/products", (req, res) => {
+  getData("products", res);
 });
 
 app.get("/cart", async (req, res) => {
-  try {
-    const data = await database.collection("carts");
-    res.status(200).json(data);
-  } catch (error) {
-    res.status(400).json({ message: "error" });
-  }
+  getData("carts", res);
 });
 
-app.post("/cart", async (req, res) => {
+app.post("/cart", (req, res) => {
   const product = req.body;
-  try {
-    const data = await database.collection("carts").insertMany({ ...product });
-    res.status(200).json(data);
-  } catch (error) {
-    res.status(400).json({ message: "error" });
-  }
+  database
+    .collection("carts")
+    .insertOne(product)
+    .then((data) => {
+      res.status(200).json(data);
+    })
+    .catch((error) => {
+      res.status(500).json({ message: "error" });
+    });
 });
 
-app.delete("/cart", async (req, res) => {
-  try {
-    await database.collection("carts").deleteOne({ _id: req.body.id });
-    const data = await database.collection("carts");
-    res.status(200).json(data);
-  } catch (error) {
-    res.status(400).json({ message: "error" });
-  }
+app.delete("/cart", (req, res) => {
+  database
+    .collection("carts")
+    .deleteOne({ _id: req.body.id })
+    .then((result) => {
+      res.status(200).json(result);
+    })
+    .catch((err) => {
+      res.status(500).json({ error: "Could not delete document" });
+    });
 });
 
 app.post("/order", async (req, res) => {
   const order = req.body;
-  try {
-    const data = await database.collection("orders").insertMany({ ...order });
-    order.items.map(
-      async (item) =>
-        await database.collection("carts").deleteOne({ _id: item?._id })
-    );
-    res.status(200).json(data);
-  } catch (error) {
-    res.status(400).json({ message: "error" });
-  }
+  const ids = order.items.map((item) => item._id);
+  database
+    .collection("orders")
+    .insertOne(order)
+    .then((data) => {
+      console.log(data);
+      res.status(200).json(data);
+    })
+    .catch((error) => {
+      res.status(500).json({ message: "error" });
+    });
+
+  database
+    .collection("carts")
+    .deleteMany({ _id: { $in: ids } })
+    .then((result) => {
+      res.status(200).json(result);
+    })
+    .catch((err) => {
+      res.status(500).json({ error: "Could not delete document" });
+    });
 });
