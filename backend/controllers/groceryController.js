@@ -1,34 +1,24 @@
-const express = require("express");
-const app = express();
-const { PRODUCTS, CART, ORDER } = require("../../models/mongo/grocerySchema");
-require("../../database/mongo/groceryDB");
+const { PRODUCTS, CART, ORDER } = require("../models/grocerySchema");
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-
-app.get("/", (req, res) => {
-  res.status(200).json({ message: "success" });
-});
-
-app.get("/products", async (req, res) => {
+const getAllProducts = async (req, res) => {
   try {
     const data = await PRODUCTS.find();
     res.status(200).json(data);
   } catch (error) {
     res.status(400).json({ message: "error" });
   }
-});
+};
 
-app.get("/cart", async (req, res) => {
+const getCartProducts = async (req, res) => {
   try {
     const data = await CART.find();
     res.status(200).json(data);
   } catch (error) {
     res.status(400).json({ message: "error" });
   }
-});
+};
 
-app.post("/cart", async (req, res) => {
+const addNewProductToCart = async (req, res) => {
   const product = req.body;
   try {
     const data = await CART.insertMany({ ...product });
@@ -36,9 +26,9 @@ app.post("/cart", async (req, res) => {
   } catch (error) {
     res.status(400).json({ message: "error" });
   }
-});
+};
 
-app.delete("/cart", async (req, res) => {
+const deleteCartProduct = async (req, res) => {
   try {
     await CART.findByIdAndDelete({
       _id: req.body.id,
@@ -48,9 +38,9 @@ app.delete("/cart", async (req, res) => {
   } catch (error) {
     res.status(400).json({ message: "error" });
   }
-});
+};
 
-app.post("/order", async (req, res) => {
+const orderProducts = async (req, res) => {
   const order = req.body;
   try {
     const data = await ORDER.insertMany({ ...order });
@@ -61,6 +51,12 @@ app.post("/order", async (req, res) => {
   } catch (error) {
     res.status(400).json({ message: "error" });
   }
-});
+};
 
-app.listen(5000, () => console.log("Server Connected..."));
+module.exports = {
+  getAllProducts,
+  getCartProducts,
+  addNewProductToCart,
+  deleteCartProduct,
+  orderProducts,
+};

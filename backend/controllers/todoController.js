@@ -1,27 +1,16 @@
-const express = require("express");
-const app = express();
-const TODO = require("../../models/mongo/todoScema");
-require("../../database/mongo/todoDB");
+const TODO = require("../models/todoScema");
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-
-app.get("/", (req, res) => {
-  res.send("Hello");
-  res.status(200).json({ message: "success" });
-});
-
-app.get("/todos", async (req, res) => {
+const getTodo = async (req, res) => {
   try {
     const data = await TODO.find();
     res.status(200).json(data);
   } catch (error) {
     console.log(error);
-    // res.status(400).json({ message: "error" });
+    res.status(500).json({ message: "error" });
   }
-});
+};
 
-app.post("/todos", async (req, res) => {
+const addTodo = async (req, res) => {
   try {
     const data = await TODO.insertMany({
       name: req.body.name,
@@ -30,9 +19,9 @@ app.post("/todos", async (req, res) => {
   } catch (error) {
     res.status(400).json({ message: "error" });
   }
-});
+};
 
-app.put("/todos", async (req, res) => {
+const updateTodo = async (req, res) => {
   try {
     const ddd = await TODO.findByIdAndUpdate(
       req.body._id,
@@ -44,9 +33,9 @@ app.put("/todos", async (req, res) => {
   } catch (error) {
     res.status(400).json({ message: "error" });
   }
-});
+};
 
-app.delete("/todos", async (req, res) => {
+const deleteTodo = async (req, res) => {
   try {
     await TODO.findByIdAndDelete({
       _id: req.body.id,
@@ -56,6 +45,6 @@ app.delete("/todos", async (req, res) => {
   } catch (error) {
     res.status(400).json({ message: "error" });
   }
-});
+};
 
-app.listen(5000, () => console.log("Server Connected..."));
+module.exports = { getTodo, addTodo, updateTodo, deleteTodo };
