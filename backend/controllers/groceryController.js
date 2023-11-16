@@ -9,6 +9,16 @@ const getAllProducts = async (req, res) => {
   }
 };
 
+const addNewProducts = async (req, res) => {
+  try {
+    const product = req.body;
+    const data = await PRODUCTS.insertMany({ ...product });
+    res.status(200).json(data);
+  } catch (error) {
+    res.status(400).json({ message: "error" });
+  }
+};
+
 const getCartProducts = async (req, res) => {
   try {
     const data = await CART.find();
@@ -59,4 +69,5 @@ module.exports = {
   addNewProductToCart,
   deleteCartProduct,
   orderProducts,
+  addNewProducts,
 };

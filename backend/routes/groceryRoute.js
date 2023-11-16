@@ -5,15 +5,17 @@ const {
   addNewProductToCart,
   deleteCartProduct,
   orderProducts,
+  addNewProducts,
 } = require("../controllers/groceryController");
-require("../database/mongo/groceryDB");
+require("../database/mongo/db");
 const router = express.Router();
 
 // Routes
-router.get("/products", getAllProducts);
-router.get("/cart", getCartProducts);
-router.post("/cart", addNewProductToCart);
-router.delete("/cart", deleteCartProduct);
-router.post("/order", orderProducts);
+router.get("/api/products", getAllProducts);
+router.post("/api/addproduct", addNewProducts);
+router.get("/api/cart", getCartProducts);
+router.post("/api/cart", addNewProductToCart);
+router.delete("/api/cart", deleteCartProduct);
+router.post("/api/order", orderProducts);
 
 module.exports = router;

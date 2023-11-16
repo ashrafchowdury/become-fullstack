@@ -1,14 +1,12 @@
 const express = require("express");
 const app = express();
 // const authRoute = require("./routes/authRoute");
-const todoRoute = require("./routes/todoRouter");
-// const groceryRoute = require("./routes/groceryRoute");
+const groceryRoute = require("./routes/groceryRoute");
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 // app.use(authRoute);
-app.use(todoRoute);
-// app.use(groceryRoute);
+app.use(groceryRoute);
 
 app.get("/", (req, res) => {
   res.status(200).json({ message: "success" });

@@ -1,18 +1,15 @@
 import { Routes, Route } from "react-router-dom";
-import {
-  Home,
-  Todo,
-  SignUp,
-  Login,
-  Auth,
-  Grocery,
-  Detaile,
-  AddCart,
-  ProductContextProvider,
-  Order,
-} from "./pages";
+import Home from "./pages/Home";
 import { ThemeProvider } from "./interfaces/theme/theme-provider";
 import { Toaster } from "./interfaces";
+import Detaile from "./pages/Detaile";
+import Order from "./pages/restricted/Order";
+import Nav from "./components/Nav";
+import AddNewProduct from "./pages/restricted/AddNewProduct";
+import ProductContextProvider from "./context/ProductContext";
+import UserProfile from "./pages/restricted/UserProfile";
+import AuthContextProvider from "./context/AuthContext";
+import NotFound from "./pages/NotFound";
 
 function App() {
   return (
@@ -23,24 +20,19 @@ function App() {
         enableSystem
         disableTransitionOnChange
       >
-        <Routes>
-          <Route path="/" element={<Home />} />
-
-          <Route path="/todo" element={<Todo />} />
-
-          <Route path="/auth" element={<Auth />} />
-          <Route path="/auth/signup" element={<SignUp />} />
-          <Route path="/auth/login" element={<Login />} />
-        </Routes>
-
-        <ProductContextProvider>
-          <Routes>
-            <Route path="/grocery" element={<Grocery />} />
-            <Route path="/grocery/cart" element={<AddCart />} />
-            <Route path="/grocery/product/:id" element={<Detaile />} />
-            <Route path="/grocery/order" element={<Order />} />
-          </Routes>
-        </ProductContextProvider>
+        <AuthContextProvider>
+          <ProductContextProvider>
+            <Nav />
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="*" element={<NotFound />} />
+              <Route path="/profile/:id" element={<UserProfile />} />
+              <Route path="/add-new-product" element={<AddNewProduct />} />
+              <Route path="/grocery/product/:id" element={<Detaile />} />
+              <Route path="/grocery/order" element={<Order />} />
+            </Routes>
+          </ProductContextProvider>
+        </AuthContextProvider>
         <Toaster />
       </ThemeProvider>
     </main>

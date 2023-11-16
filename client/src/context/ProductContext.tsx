@@ -1,5 +1,5 @@
 import { useState, useEffect, createContext, useContext, lazy } from "react";
-import { useToast } from "../../../interfaces";
+import { useToast } from "../interfaces";
 
 export const ProductContext = createContext(null);
 export const useProduct = () => useContext(ProductContext)!;
@@ -10,19 +10,19 @@ const ProductContextProvider = ({ children }: any) => {
   const { toast } = useToast();
 
   const getAllProducts = async () => {
-    const data = await fetch("/products");
+    const data = await fetch("/api/products");
     const res = await data.json();
     setProducts(res);
   };
 
   const getAllCartProducts = async () => {
-    const data = await fetch("/cart");
+    const data = await fetch("/api/cart");
     const res = await data.json();
     setCart(res);
   };
 
   const addCartProduct = async (item: any, quantity: any) => {
-    const data = await fetch("/cart", {
+    const data = await fetch("/api/cart", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -35,7 +35,7 @@ const ProductContextProvider = ({ children }: any) => {
   };
 
   const deleteCartProduct = async (id: any) => {
-    const data = await fetch("/cart", {
+    const data = await fetch("/api/cart", {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",

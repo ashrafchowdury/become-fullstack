@@ -46,6 +46,18 @@ import {
   ToastClose,
   ToastAction,
 } from "./toast";
+import {
+  Sheet,
+  SheetPortal,
+  SheetOverlay,
+  SheetTrigger,
+  SheetClose,
+  SheetContent,
+  SheetHeader,
+  SheetFooter,
+  SheetTitle,
+  SheetDescription,
+} from "./sheet";
 
 export {
   Button,
@@ -93,4 +105,14 @@ export {
   ToastDescription,
   ToastClose,
   ToastAction,
+  Sheet,
+  SheetPortal,
+  SheetOverlay,
+  SheetTrigger,
+  SheetClose,
+  SheetContent,
+  SheetHeader,
+  SheetFooter,
+  SheetTitle,
+  SheetDescription,
 };

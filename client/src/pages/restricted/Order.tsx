@@ -1,21 +1,12 @@
 import React, { useState, useEffect, ChangeEvent } from "react";
-import Nav from "./components/Nav";
-import { Input, Button, Label, Separator } from "../../interfaces";
-import { useProduct } from "./context/ProductContext";
-import CartItem from "./components/CartItem";
-import CartSummary from "./components/CartSummary";
-import { useToast } from "../../interfaces";
+import { Input, Button, Label, Separator, useToast } from "../../interfaces";
+import { useProduct } from "../../context/ProductContext";
+import CartItem from "../../components/cart/CartItem";
+import CartSummary from "../../components/cart/CartSummary";
 import { useNavigate } from "react-router-dom";
+import UserCredientials from "../../components/UserCredientials";
 
 const Order = () => {
-  const [info, setInfo] = useState<any>({
-    name: "",
-    email: "",
-    phone: "",
-    address: "",
-    city: "",
-    state: "",
-  });
   const [payDetile, setPayDetile] = useState({
     name: "",
     number: "",
@@ -30,20 +21,15 @@ const Order = () => {
     getAllCartProducts();
   }, []);
 
-  const handleInfo = (e: ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setInfo({ ...info, [name]: value });
-  };
   const handlePayDetaile = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setPayDetile({ ...payDetile, [name]: value });
   };
 
   const handleOrder = async () => {
-    const detaile = Object.values(info).filter((item) => item !== "");
     const pay = Object.values(payDetile).filter((item) => item !== "");
 
-    if (detaile.length < 6 || pay.length < 4) {
+    if (pay.length < 4) {
       toast({ title: "⚠️ Please fillup all the filds" });
     } else {
       const data = await fetch("/order", {
@@ -51,7 +37,7 @@ const Order = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ items: cart, detaile: info, pay: payDetile }),
+        body: JSON.stringify({ items: cart, pay: payDetile }),
       });
       const res = await data.json();
       res?._id && toast({ title: "Order placed successfully 🥳" });
@@ -60,72 +46,11 @@ const Order = () => {
   };
   return (
     <>
-      <Nav />
       <main className="flex items-start justify-center my-16">
         <section className="mr-20 w-[600px]">
-          <h2 className="text-2xl font-semibold mb-6">Shipping Informations</h2>
-          <div className="space-y-3">
-            <div className="space-y-2">
-              <Label htmlFor="name">Name</Label>
-              <Input
-                name="name"
-                className="px-4 py-2 w-full"
-                value={info.name}
-                onChange={handleInfo}
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
-              <Input
-                name="email"
-                className="px-4 py-2 w-full"
-                value={info.email}
-                onChange={handleInfo}
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="phone">Phone</Label>
-              <Input
-                type="phone"
-                name="phone"
-                className="px-4 py-2 w-full"
-                value={info.phone}
-                onChange={handleInfo}
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="address">Address</Label>
-              <Input
-                name="address"
-                className="px-4 py-2 w-full"
-                value={info.address}
-                onChange={handleInfo}
-              />
-            </div>
-
-            <div className="flex items-center space-x-2 w-full">
-              <div className="space-y-2 w-full">
-                <Label htmlFor="city">City</Label>
-                <Input
-                  name="city"
-                  className="px-4 py-2"
-                  value={info.city}
-                  onChange={handleInfo}
-                />
-              </div>
-              <div className="space-y-2 w-full">
-                <Label htmlFor="city">State</Label>
-                <Input
-                  name="state"
-                  className="px-4 py-2"
-                  value={info.state}
-                  onChange={handleInfo}
-                />
-              </div>
-            </div>
-          </div>
-          <Separator className="w-full my-10" />
-          <h2 className="text-2xl font-semibold mb-6">Payment details</h2>
+          <h2 className="text-2xl font-semibold mb-6">User Information</h2>
+          <UserCredientials isDisabled={false} />
+          <h2 className="text-2xl font-semibold mb-6 mt-10">Payment details</h2>
           <div className="space-y-3">
             <div className="space-y-2">
               <Label htmlFor="card">Name on card</Label>

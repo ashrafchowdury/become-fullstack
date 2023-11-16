@@ -1,21 +1,28 @@
 import { Link } from "react-router-dom";
-import { Input, Button } from "../interfaces";
+import Product from "../components/Product";
+import { useProduct } from "../context/ProductContext";
 
 const Home = () => {
+  const { products }: any = useProduct();
   return (
-    <main className="absolute top-[50%] left-[50%] transform translate-x-[-50%] translate-y-[-50%]">
-      <nav className="py-4 px-8 rounded-xl border flex items-center space-x-9">
-        <Link to="/todo" className=" font-bold">
-          ToDo
-        </Link>
-        <Link to="/auth" className=" font-bold">
-          Authentication
-        </Link>
-        <Link to="/grocery" className=" font-bold">
-          Grocery
-        </Link>
-      </nav>
-    </main>
+    <>
+      <header>
+        <img
+          src="https://images.unsplash.com/photo-1483546416237-76fd26bbcdd1?auto=format&fit=crop&q=60&w=500&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8bm90ZXN8ZW58MHwwfDB8fHww"
+          alt="image"
+          className="w-full rounded-lg h-[380px] object-cover"
+        />
+      </header>
+
+      <section className="mt-20 ">
+        <h2 className=" font-bold text-2xl mb-8">Products</h2>
+        <div className="flex flex-wrap items-center justify-center md:-ml-3">
+          {products.map((product: any) => (
+            <Product product={product} />
+          ))}
+        </div>
+      </section>
+    </>
   );
 };
 
