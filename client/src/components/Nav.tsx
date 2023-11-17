@@ -1,9 +1,10 @@
 import { Link } from "react-router-dom";
-import { MoonIcon, SunIcon } from "lucide-react";
-import { Button } from "../interfaces";
+import { MoonIcon, SunIcon, User2 } from "lucide-react";
+import { Button, Popover, PopoverContent, PopoverTrigger } from "../interfaces";
 import { useTheme } from "next-themes";
 import Register from "./Register";
 import AddToCart from "./AddToCart";
+import NavUserMenu from "./NavUserMenu";
 
 const Nav = () => {
   const { setTheme, theme } = useTheme();
@@ -37,6 +38,7 @@ const Nav = () => {
 
         <AddToCart />
         <Register />
+        {/* <NavUserMenu /> */}
       </div>
     </nav>
   );

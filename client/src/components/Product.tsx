@@ -8,7 +8,7 @@ const Product = ({ product }: any) => {
       to={`/grocery/product/${product._id}`}
       className="group m-4"
     >
-      <div className="aspect-h-1 aspect-w-1 w-[280px] overflow-hidden rounded-lg xl:aspect-h-8 xl:aspect-w-7">
+      <div className="aspect-h-1 aspect-w-1 w-[280px] h-[280px] overflow-hidden rounded-lg xl:aspect-h-8 xl:aspect-w-7">
         <img
           src={product.imageSrc}
           alt={product.name}
