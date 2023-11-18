@@ -1,63 +1,40 @@
 const AUTH = require("../models/authSchema");
+const jwt = require("jsonwebtoken");
+
+const createToken = (_id) => {
+  return jwt.sign({ _id }, process.env.JWT_SECRET_KEY, { expiresIn: "3d" });
+};
 
 const getCurrentUser = async (req, res) => {
   try {
-    const cookieValue = req.cookies.auth;
-    if (cookieValue) {
-      const data = await AUTH.findOne({ email: cookieValue });
-      res.status(200).json(data);
-    } else {
-      res.status(200).json({ message: "Not found" });
-    }
+    const id = req.user._id;
+    const data = await AUTH.findOne({ _id: id });
+    res.status(200).json(data);
   } catch (error) {
-    console.log(error);
-    res.status(400).json({ message: "error" });
+    res.status(400).json({ error: error.message });
   }
 };
 
 const createAccount = async (req, res) => {
+  const { name, email, password } = req.body;
   try {
-    const { name, email, password } = req.body;
-    const checkExsistence = await AUTH.findOne({ email: email });
-    if (!checkExsistence) {
-      const data = await AUTH.insertMany({
-        name: name,
-        email: email,
-        password: password,
-      });
-      res.cookie("auth", data[0].email, { maxAge: 60 * 60 * 1000 });
-      res.status(200).json(data);
-    } else {
-      res.status(400).json({ message: "User already exsist" });
-    }
+    const data = await AUTH.signup(name, email, password);
+    const token = createToken(data._id);
+    res.status(200).json({ token });
   } catch (error) {
-    res.status(400).json({ message: "error" });
+    res.status(400).json({ error: error.message });
   }
 };
 
 const login = async (req, res) => {
+  const { email, password } = req.body;
   try {
-    const { email, password } = req.body;
-    const data = await AUTH.findOne({ email: email, password: password });
-    if (data) {
-      res.cookie("auth", data.email, { maxAge: 60 * 60 * 1000 });
-      res.status(200).json(data);
-    } else {
-      res.status(400).json({ message: "Something went wrong!" });
-    }
+    const data = await AUTH.signin(email, password);
+    const token = createToken(data._id);
+    res.status(200).json({ token });
   } catch (error) {
-    res.status(400).json({ message: "error" });
+    res.status(400).json({ error: error.message });
   }
 };
 
-const logout = async (req, res) => {
-  try {
-    const { email } = req.body;
-    res.cookie("auth", email, { expires: new Date(0) });
-    res.status(200).json({ message: "User Logout Succcessfully" });
-  } catch (error) {
-    res.status(400).json({ message: "error" });
-  }
-};
-
-module.exports = { getCurrentUser, createAccount, login, logout };
+module.exports = { getCurrentUser, createAccount, login };

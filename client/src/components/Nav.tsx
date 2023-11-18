@@ -5,9 +5,11 @@ import { useTheme } from "next-themes";
 import Register from "./Register";
 import AddToCart from "./AddToCart";
 import NavUserMenu from "./NavUserMenu";
+import { useAuth } from "../context/AuthContext";
 
 const Nav = () => {
   const { setTheme, theme } = useTheme();
+  const { uid } = useAuth();
   return (
     <nav className="flex items-center justify-between h-[100px]">
       <Link to="/" className="text-sm opacity-90 font-medium">
@@ -37,8 +39,7 @@ const Nav = () => {
         )}
 
         <AddToCart />
-        <Register />
-        {/* <NavUserMenu /> */}
+        {uid ? <NavUserMenu /> : <Register />}
       </div>
     </nav>
   );

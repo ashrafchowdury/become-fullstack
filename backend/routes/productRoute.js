@@ -6,12 +6,13 @@ const {
   deleteCartProduct,
   orderProducts,
   addNewProducts,
-} = require("../controllers/groceryController");
-require("../database/mongo/db");
+} = require("../controllers/productController");
+const authMiddleware = require("../middlewares/authMiddleware");
 const router = express.Router();
 
 // Routes
 router.get("/api/products", getAllProducts);
+router.use(authMiddleware);
 router.post("/api/addproduct", addNewProducts);
 router.get("/api/cart", getCartProducts);
 router.post("/api/cart", addNewProductToCart);

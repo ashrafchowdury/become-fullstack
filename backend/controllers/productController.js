@@ -1,4 +1,4 @@
-const { PRODUCTS, CART, ORDER } = require("../models/grocerySchema");
+const { PRODUCTS, CART, ORDER } = require("../models/productSchema");
 
 const getAllProducts = async (req, res) => {
   try {

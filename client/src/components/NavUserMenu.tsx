@@ -8,8 +8,10 @@ import {
 import { MoonIcon, SunIcon, User2 } from "lucide-react";
 import { Arrow } from "@radix-ui/react-popover";
 import { Link } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
 const NavUserMenu = () => {
+  const { logout } = useAuth();
   return (
     <Popover>
       <PopoverTrigger asChild>
@@ -30,7 +32,10 @@ const NavUserMenu = () => {
           Order History
         </Link>
 
-        <button className="w-full text-start text-sm font-semibold text-foreground">
+        <button
+          onClick={() => logout()}
+          className="w-full text-start text-sm font-semibold text-foreground"
+        >
           Log Out
         </button>
         <Arrow />

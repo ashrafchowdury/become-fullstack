@@ -6,6 +6,10 @@ import UserCredientials from "../../components/UserCredientials";
 
 const UserProfile = () => {
   const [isEdit, setIsEdit] = useState(true);
+  const { getCurrentUser, currentUser } = useAuth();
+  useEffect(() => {
+    getCurrentUser();
+  }, []);
 
   return (
     <main className="w-[600px] flex flex-col items-center mx-auto">

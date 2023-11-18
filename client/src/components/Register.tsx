@@ -19,15 +19,16 @@ import {
   useToast,
 } from "../interfaces";
 import { LockIcon, User2, Mail } from "lucide-react";
+import { useAuth } from "../context/AuthContext";
 
 const Register = () => {
-  // const { singup, login, forget, isLoading } = useAuth();
+  const { singup, login, forget, isLoading } = useAuth();
   const { toast } = useToast();
-  let singup: any, login: any, forget: any, isLoading: any;
+
   const handleForms = async (
     e: FormEvent<HTMLFormElement>,
     form: number[],
-    authFunction: (...args: string[]) => void
+    authFunction: any
   ) => {
     e.preventDefault();
     const value = form.map(

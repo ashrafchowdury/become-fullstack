@@ -40,7 +40,7 @@ export default function AddToCart() {
 
         <section className="mt-5 w-full h-[64%] overflow-hidden overflow-y-auto">
           <ul role="list">
-            {cart.map((product: any) => (
+            {cart?.map((product: any) => (
               <>
                 <CartItem data={product} />
                 <Separator className="my-4" />
@@ -49,7 +49,7 @@ export default function AddToCart() {
           </ul>
         </section>
 
-        {cart.length > 0 && (
+        {cart?.length > 0 && (
           <section className="w-full">
             <CartSummary className="w-full" data={cart} />
             <div className="mt-4">
