@@ -1,5 +1,7 @@
 const jwt = require("jsonwebtoken");
 const AUTH = require("../models/authSchema");
+const validator = require("validator");
+const bcrypt = require("bcrypt");
 
 const authMiddleware = async (req, res, next) => {
   const { authorization } = req.headers;
@@ -12,8 +14,40 @@ const authMiddleware = async (req, res, next) => {
     req.user = await AUTH.findOne({ _id }).select("_id");
     next();
   } catch (error) {
-    res.status(401).json({ error: "Authorization required" });
+    res.status(500).json({ error: "Authorization error" });
   }
 };
 
-module.exports = authMiddleware;
+const signupVlidation = async (req, res, next) => {
+  const { email, password } = req.body;
+  const isEmailExist = await AUTH.findOne({ email });
+
+  if (isEmailExist) {
+    res.status(400).json({ error: "User email already exist" });
+  }
+  if (!validator.isEmail(email)) {
+    res.status(400).json({ error: "Invalid Email" });
+  }
+  if (!validator.isStrongPassword(password)) {
+    res.status(400).json({ error: "Password is not strong enough" });
+  }
+  next();
+};
+
+const loginVlidation = async (req, res, next) => {
+  const { email, password } = req.body;
+  const user = await AUTH.findOne({ email });
+
+  if (!user) {
+    res.status(400).json({ error: "Invalid Email" });
+  }
+  const match = await bcrypt.compare(password, user.password);
+  if (!match) {
+    res.status(400).json({ error: "Invalid Password" });
+  }
+
+  req.data = user; // assign data to user object
+  next();
+};
+
+module.exports = { authMiddleware, signupVlidation, loginVlidation };

@@ -7,7 +7,7 @@ const {
   orderProducts,
   addNewProducts,
 } = require("../controllers/productController");
-const authMiddleware = require("../middlewares/authMiddleware");
+const { authMiddleware } = require("../middlewares/authMiddleware");
 const router = express.Router();
 
 // Routes

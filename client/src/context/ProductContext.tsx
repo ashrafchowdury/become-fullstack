@@ -26,6 +26,7 @@ const ProductContextProvider = ({ children }: any) => {
   };
 
   const getAllCartProducts = async () => {
+    if (uid) return;
     try {
       const response = await axios.get("/api/cart", {
         headers: {

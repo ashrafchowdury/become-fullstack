@@ -16,12 +16,17 @@ import { useProduct } from "../context/ProductContext";
 import CartItem from "./cart/CartItem";
 import CartSummary from "./cart/CartSummary";
 import { Link } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
 export default function AddToCart() {
   const { getAllCartProducts, cart }: any = useProduct();
+  const { uid } = useAuth();
+
   useEffect(() => {
-    getAllCartProducts();
-  }, []);
+    if (Boolean(uid)) {
+      getAllCartProducts();
+    }
+  }, [uid]);
 
   return (
     <Sheet>
