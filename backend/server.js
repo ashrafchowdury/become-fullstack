@@ -6,10 +6,12 @@ const {
   errorMiddleware,
   globalErrorMiddleware,
 } = require("./middlewares/errorMiddleware");
+const helmet = require("helmet");
 require("./database/mongoDB");
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+app.use(helmet());
 app.use("/api/auth", authRoute);
 app.use(productRoute);
 app.use(errorMiddleware);
