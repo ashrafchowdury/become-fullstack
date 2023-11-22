@@ -32,7 +32,7 @@ const Order = () => {
     if (pay.length < 4) {
       toast({ title: "⚠️ Please fillup all the filds" });
     } else {
-      const data = await fetch("/order", {
+      const data = await fetch("/api/v1/products/order-product", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

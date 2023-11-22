@@ -3,6 +3,12 @@
 
 echo '🏗️ Checking: Code Formatting before commit'
 
+npm run format ||
+(
+    echo '❌ Run format commad failed ❌'
+    false;
+)
+
 # Check Prettier standards
 npm run check-format ||
 (

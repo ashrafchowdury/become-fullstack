@@ -1,4 +1,4 @@
-const AUTH = require("../models/authSchema");
+const USER = require("../models/userSchema");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 
@@ -9,7 +9,7 @@ const createToken = (_id) => {
 const getCurrentUser = async (req, res) => {
   try {
     const id = req.user._id;
-    const data = await AUTH.findOne({ _id: id });
+    const data = await USER.findOne({ _id: id });
     res.status(200).json(data);
   } catch (error) {
     res.status(400).json({ error: `User: ${error.message}` });
@@ -23,7 +23,7 @@ const createAccount = async (req, res) => {
     const slat = await bcrypt.genSalt(10);
     const hash = await bcrypt.hash(password, slat);
     // create new user
-    const data = await AUTH.create({ name, email, password: hash });
+    const data = await USER.create({ name, email, password: hash });
     const token = createToken(data._id);
     res.status(200).json({ token });
   } catch (error) {

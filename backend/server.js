@@ -12,8 +12,8 @@ require("./database/mongoDB");
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(helmet());
-app.use("/api/auth", authRoute);
-app.use(productRoute);
+app.use("/api/v1/auth", authRoute);
+app.use("/api/v1/products", productRoute);
 app.use(errorMiddleware);
 app.use(globalErrorMiddleware);
 

@@ -11,12 +11,12 @@ const { authMiddleware } = require("../middlewares/authMiddleware");
 const router = express.Router();
 
 // Routes
-router.get("/api/products", getAllProducts);
+router.get("/all-products", getAllProducts);
 router.use(authMiddleware);
-router.post("/api/addproduct", addNewProducts);
-router.get("/api/cart", getCartProducts);
-router.post("/api/cart", addNewProductToCart);
-router.delete("/api/cart", deleteCartProduct);
-router.post("/api/order", orderProducts);
+router.post("/add-product", addNewProducts);
+router.get("/all-carts", getCartProducts);
+router.post("/add-cart", addNewProductToCart);
+router.delete("/delete-cart", deleteCartProduct);
+router.post("/order-product", orderProducts);
 
 module.exports = router;

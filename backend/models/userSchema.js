@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 
 // We'er using mongoose to create schema for MongoDB
-const authSchema = new mongoose.Schema({
+const userSchema = new mongoose.Schema({
   name: {
     type: String,
     required: false,
@@ -15,9 +15,11 @@ const authSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  cart: { type: Array },
+  order: { type: Array },
 });
 
 // registaring the schema
-const AUTH = mongoose.model("Users", authSchema);
+const USER = mongoose.model("Users", userSchema);
 
-module.exports = AUTH;
+module.exports = USER;

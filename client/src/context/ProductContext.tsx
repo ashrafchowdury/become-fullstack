@@ -14,7 +14,7 @@ const ProductContextProvider = ({ children }: any) => {
 
   const getAllProducts = async () => {
     try {
-      const response = await axios.get("/api/products", {
+      const response = await axios.get("/api/v1/products/all-products", {
         headers: {
           Authorization: `Bearer ${uid}`,
         },
@@ -28,7 +28,7 @@ const ProductContextProvider = ({ children }: any) => {
   const getAllCartProducts = async () => {
     if (uid) return;
     try {
-      const response = await axios.get("/api/cart", {
+      const response = await axios.get("/api/v1/products/all-carts", {
         headers: {
           Authorization: `Bearer ${uid}`,
         },
@@ -41,7 +41,7 @@ const ProductContextProvider = ({ children }: any) => {
 
   const addCartProduct = async (item: any, quantity: any) => {
     try {
-      const response = await axios.post("/api/cart", {
+      const response = await axios.post("/api/v1/products/add-cart", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -58,7 +58,7 @@ const ProductContextProvider = ({ children }: any) => {
 
   const deleteCartProduct = async (id: any) => {
     try {
-      const response = await axios.post("/api/cart", {
+      const response = await axios.post("/api/v1/products/delete-cart", {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
