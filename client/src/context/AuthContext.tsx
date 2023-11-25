@@ -5,10 +5,12 @@ import axios from "axios";
 import Cookies from "js-cookie";
 
 // Types
-type AuthUserType = {
+export type AuthUserType = {
   name: string;
   email: string;
   _id: string;
+  phone?: string;
+  address?: string;
 };
 type AuthContextType = {
   currentUser: AuthUserType;
@@ -18,7 +20,7 @@ type AuthContextType = {
   login: (email: string, password: string) => void;
   forget: (email: string) => void;
   logout: () => void;
-  getCurrentUser: () => void;
+  getCurrentUser: (userId: string) => void;
   uid: string | undefined;
 };
 type Children = { children: React.ReactNode };
@@ -39,17 +41,16 @@ const AuthContextProvider: React.FC<Children> = ({ children }: Children) => {
   const navigate = useNavigate();
 
   // function
-  const getCurrentUser = async () => {
+  const getCurrentUser = async (userId: string) => {
     try {
       const response = await axios.get("/api/v1/auth/user", {
         headers: {
-          Authorization: `Bearer ${uid}`,
+          Authorization: `Bearer ${userId}`,
         },
       });
-      console.log(response);
-      setCurrentUser(response.data);
-    } catch (error: any) {
-      toast({ title: error.message, variant: "destructive" });
+      response.status == 200 && setCurrentUser(response.data);
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -60,26 +61,44 @@ const AuthContextProvider: React.FC<Children> = ({ children }: Children) => {
         email: email,
         password: password,
       });
-      Cookies.set("authId", response.data.token, { secure: true });
-      setUid(response.data.token);
-    } catch (error: any) {
-      console.log(error.message);
+      if (response.status == 201) {
+        Cookies.set("authId", response.data.token, { secure: true });
+        setUid(response.data.token);
+      }
+    } catch (error) {
+      console.log(error);
+      toast({
+        title: `Something went wrong. Try again`,
+        variant: "destructive",
+      });
     }
   };
+
   const login = async (email: string, password: string) => {
-    const response = await axios.post("/api/v1/auth/login", {
-      email: email,
-      password: password,
-    });
-    Cookies.set("authId", response.data.token, { secure: true });
-    setUid(response.data.token);
+    try {
+      const response = await axios.post("/api/v1/auth/login", {
+        email: email,
+        password: password,
+      });
+      if (response.status == 200) {
+        Cookies.set("authId", response.data.token, { secure: true });
+        setUid(response.data.token);
+      }
+    } catch (error) {
+      console.log(error);
+      toast({
+        title: `Something went wrong. Try again`,
+        variant: "destructive",
+      });
+    }
   };
+
   const forget = async (email: string) => {
     const response = await axios.post("/api/forget", {
       email: email,
     });
-    console.log(response);
   };
+
   const logout = async () => {
     Cookies.remove("authId");
     setUid("");
@@ -88,7 +107,11 @@ const AuthContextProvider: React.FC<Children> = ({ children }: Children) => {
   //effects
   useEffect(() => {
     const getUid = () => Cookies.get("authId") as string;
-    setUid(getUid());
+    const id = getUid();
+    if (Boolean(id)) {
+      getCurrentUser(id);
+    }
+    setUid(id);
   }, [uid]);
 
   const value: AuthContextType = {

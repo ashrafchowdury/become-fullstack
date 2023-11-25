@@ -8,6 +8,7 @@ const {
 } = require("./middlewares/errorMiddleware");
 const helmet = require("helmet");
 require("./database/mongoDB");
+require("dotenv").config();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));

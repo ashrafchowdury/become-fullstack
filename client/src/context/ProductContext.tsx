@@ -1,17 +1,43 @@
-import { useState, useEffect, createContext, useContext, lazy } from "react";
+import React, { useState, useEffect, createContext, useContext } from "react";
 import axios from "axios";
 import { useToast } from "../interfaces";
 import { useAuth } from "./AuthContext";
 
-export const ProductContext = createContext(null);
+// Types
+export type ProductType = {
+  name: string;
+  price: string;
+  imageSrc: string;
+  description?: string;
+  _id?: string;
+  quantity?: number;
+};
+type ProductContextType = {
+  products: ProductType[];
+  cart: ProductType[];
+  setCart: React.Dispatch<React.SetStateAction<ProductType[]>>;
+  addCartProduct: (item: ProductType, quantity: number) => void;
+  deleteCartProduct: (id: string) => void;
+  addNewProduct: ({
+    name,
+    imageSrc,
+    description,
+    price,
+  }: ProductType) => Promise<number | undefined>;
+};
+type Children = { children: React.ReactNode };
+
+// Context
+export const ProductContext = createContext<ProductContextType | null>(null);
 export const useProduct = () => useContext(ProductContext)!;
 
-const ProductContextProvider = ({ children }: any) => {
-  const [products, setProducts] = useState<any>([]);
-  const [cart, setCart] = useState<any>([]);
+const ProductContextProvider: React.FC<Children> = ({ children }: Children) => {
+  const [products, setProducts] = useState<ProductType[]>([]);
+  const [cart, setCart] = useState<ProductType[]>([]);
   const { toast } = useToast();
-  const { uid } = useAuth();
+  const { uid, currentUser } = useAuth();
 
+  // Get All Display Products
   const getAllProducts = async () => {
     try {
       const response = await axios.get("/api/v1/products/all-products", {
@@ -19,56 +45,92 @@ const ProductContextProvider = ({ children }: any) => {
           Authorization: `Bearer ${uid}`,
         },
       });
-      setProducts(response.data);
-    } catch (error: any) {
-      toast({ title: error.message, variant: "destructive" });
+      response.status == 200 && setProducts(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  // Add New Products
+  const addNewProduct = async ({
+    name,
+    imageSrc,
+    description,
+    price,
+  }: ProductType) => {
+    if (!name || !imageSrc || !description || !price || price == "0") {
+      toast({ title: "Please Fill All The Fildes", variant: "destructive" });
+    } else {
+      try {
+        const data = { name, imageSrc, price };
+        const response = await axios.post(`/api/products/add-product/`, data, {
+          headers: {
+            Authorization: `Bearer ${uid}`,
+          },
+        });
+        return response.status;
+      } catch (error) {
+        console.log(error);
+        toast({ title: "Something Went Wrong!", variant: "destructive" });
+      }
     }
   };
 
+  // Get All Cart Products
   const getAllCartProducts = async () => {
-    if (uid) return;
     try {
       const response = await axios.get("/api/v1/products/all-carts", {
         headers: {
           Authorization: `Bearer ${uid}`,
         },
       });
-      response.status == 200 && setCart(response.data);
-    } catch (error: any) {
-      toast({ title: error.message, variant: "destructive" });
+      response.status == 200 && setCart(response.data.products);
+    } catch (error) {
+      console.log(error);
+      toast({
+        title: "Something went wrong. Can't load the cart products",
+        variant: "destructive",
+      });
     }
   };
 
-  const addCartProduct = async (item: any, quantity: any) => {
+  // Add Product To Cart
+  const addCartProduct = async (item: ProductType, quantity: number) => {
+    const data = {
+      productId: item._id,
+      quantity: quantity,
+    };
     try {
-      const response = await axios.post("/api/v1/products/add-cart", {
-        method: "POST",
+      const response = await axios.post("/api/v1/products/add-cart", data, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${uid}`,
         },
-        body: JSON.stringify({ ...item, quantity: quantity }),
       });
-      toast({ title: `✨ ${item.name} added` });
-      setCart([...cart, response.data]);
+      if (response.status == 200 || response.status == 201) {
+        toast({ title: `✨ ${item.name} added` });
+        setCart(response.data.products);
+      }
     } catch (error: any) {
-      toast({ title: error.message, variant: "destructive" });
+      console.log(error);
+      toast({ title: "Something went wrong!", variant: "destructive" });
     }
   };
 
-  const deleteCartProduct = async (id: any) => {
+  // Delete Product From Cart
+  const deleteCartProduct = async (id: string) => {
     try {
-      const response = await axios.post("/api/v1/products/delete-cart", {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${uid}`,
-        },
-        body: JSON.stringify({ id }),
-      });
-      setCart(response.data);
+      const response = await axios.delete(
+        `/api/v1/products/delete-cart/${id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${uid}`,
+          },
+        }
+      );
+      response.status == 200 && setCart(response.data.products);
     } catch (error: any) {
-      toast({ title: error.message, variant: "destructive" });
+      console.log(error);
+      toast({ title: "Something went wrong!", variant: "destructive" });
     }
   };
 
@@ -76,13 +138,19 @@ const ProductContextProvider = ({ children }: any) => {
     getAllProducts();
   }, []);
 
-  const value: any = {
+  useEffect(() => {
+    if (Boolean(uid)) {
+      getAllCartProducts();
+    }
+  }, [uid]);
+
+  const value: ProductContextType = {
     products,
-    setProducts,
-    getAllCartProducts,
-    addCartProduct,
     cart,
+    setCart,
+    addCartProduct,
     deleteCartProduct,
+    addNewProduct,
   };
 
   return (

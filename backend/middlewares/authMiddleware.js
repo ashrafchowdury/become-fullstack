@@ -28,9 +28,9 @@ const signupVlidation = async (req, res, next) => {
   if (!validator.isEmail(email)) {
     res.status(400).json({ error: "Invalid Email" });
   }
-  if (!validator.isStrongPassword(password)) {
-    res.status(400).json({ error: "Password is not strong enough" });
-  }
+  // if (!validator.isStrongPassword(password)) {
+  //   res.status(400).json({ error: "Password is not strong enough" });
+  // }
   next();
 };
 

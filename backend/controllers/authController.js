@@ -3,7 +3,7 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 
 const createToken = (_id) => {
-  return jwt.sign({ _id }, "process.env.JWT_SECRET_KEY", { expiresIn: "3d" });
+  return jwt.sign({ _id }, process.env.JWT_SECRET_KEY, { expiresIn: "3d" });
 };
 
 const getCurrentUser = async (req, res) => {
@@ -25,7 +25,7 @@ const createAccount = async (req, res) => {
     // create new user
     const data = await USER.create({ name, email, password: hash });
     const token = createToken(data._id);
-    res.status(200).json({ token });
+    res.status(201).json({ token });
   } catch (error) {
     res.status(500).json({ error: `Signup: ${error.message}` });
   }

@@ -16,39 +16,27 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../../interfaces";
-import axios from "axios";
+import { useProduct } from "../../context/ProductContext";
 
 type Input = ChangeEvent<HTMLInputElement>;
 
 const AddNewProduct = () => {
   const [name, setName] = useState("");
-  const [desc, setDesc] = useState("");
-  const [img, setImg] = useState("");
+  const [description, setDescription] = useState("");
+  const [imageSrc, setImageSrc] = useState("");
   const [price, setPrice] = useState("");
   const [cetagory, setCetagory] = useState("");
-  const { toast } = useToast();
+  const { addNewProduct } = useProduct();
 
-  const addNewProduct = async () => {
-    if (!name || !img || !desc || !price || price == "0") {
-      toast({ title: "Please Fill All The Fildes", variant: "destructive" });
-    } else {
-      try {
-        const addProduct = await axios.post("/api/addproduct", {
-          name: name,
-          imageSrc: img,
-          price: `$${price}`,
-        });
-        clearStates();
-      } catch (error) {
-        console.log(error);
-        toast({ title: "Something Went Wrong!", variant: "destructive" });
-      }
-    }
+  const handleNewProduct = async () => {
+    const status = await addNewProduct({ name, imageSrc, price, description });
+    status == 201 && clearStates();
   };
+
   const clearStates = () => {
     setName("");
-    setDesc("");
-    setImg("");
+    setDescription("");
+    setImageSrc("");
     setPrice("");
   };
   return (
@@ -76,8 +64,8 @@ const AddNewProduct = () => {
               <Input
                 id="image"
                 placeholder="Add product image URL"
-                value={img}
-                onChange={(e: Input) => setImg(e.target.value)}
+                value={imageSrc}
+                onChange={(e: Input) => setImageSrc(e.target.value)}
               />
             </div>
             <div className="flex flex-col space-y-1.5">
@@ -85,8 +73,8 @@ const AddNewProduct = () => {
               <Input
                 id="description"
                 placeholder="Product Description"
-                value={desc}
-                onChange={(e: Input) => setDesc(e.target.value)}
+                value={description}
+                onChange={(e: Input) => setDescription(e.target.value)}
               />
             </div>
             <div className="flex flex-col space-y-1.5">
@@ -119,7 +107,7 @@ const AddNewProduct = () => {
           <Button variant="outline" onClick={clearStates}>
             Cancel
           </Button>
-          <Button onClick={addNewProduct}>Deploy</Button>
+          <Button onClick={handleNewProduct}>Deploy</Button>
         </CardFooter>
       </Card>
 
@@ -134,9 +122,9 @@ const AddNewProduct = () => {
           <section className=" space-y-3">
             <img
               src={
-                !img
+                !imageSrc
                   ? "https://tailwindui.com/img/ecommerce-images/category-page-04-image-card-08.jpg"
-                  : img
+                  : imageSrc
               }
               alt={!name ? "Focus Carry Pouch" : name}
               className="w-full h-[270px] rounded-lg object-cover"
@@ -145,9 +133,9 @@ const AddNewProduct = () => {
               {!name ? "Focus Carry Pouch" : name}
             </p>
             <p className="text-sm text-foreground">
-              {!desc
+              {!description
                 ? "These low-profile sneakers are your perfect casual wear companion. Featuring a durable rubber outer sole, they’ll withstand everything the weather can offer."
-                : desc}
+                : description}
             </p>
             <div className="w-full flex items-center justify-between !mt-7 px-1">
               <p className="text-sm">Price: {price == "" ? 85 : price}.00$</p>

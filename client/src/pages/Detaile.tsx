@@ -7,16 +7,16 @@ import { ShoppingCart, PlusIcon, Minus } from "lucide-react";
 
 const Detaile = () => {
   const [productCounter, setProductCounter] = useState(1);
-  const { products, addCartProduct }: any = useProduct();
+  const { products, addCartProduct } = useProduct();
   const route = useLocation();
-  const productId = route.pathname.split("/")[3];
+  const productId = route.pathname.split("/")[2];
 
   return (
     <>
       <main className="flex flex-col md:flex-row md:px-0 md:gap-6 md:py-20 items-center md:justify-center lg:px-14 lg:gap-16">
         {products
-          .filter((item: any) => productId == item._id)
-          .map((item: any) => (
+          .filter((item) => productId == item._id)
+          .map((item) => (
             <>
               <div className="relative md:w-full md:max-w-[500px]">
                 <img src={item.imageSrc} className=" rounded-xl" />
@@ -93,9 +93,9 @@ const Detaile = () => {
       <h2 className="font-bold text-2xl mt-24 mb-8">Related Prodcuts</h2>
       <section className="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8 !mb-12">
         {products
-          .filter((item: any) => productId !== item._id)
+          .filter((item) => productId !== item._id)
           .slice(0, 4)
-          .map((item: any) => (
+          .map((item) => (
             <Product product={item} />
           ))}
       </section>

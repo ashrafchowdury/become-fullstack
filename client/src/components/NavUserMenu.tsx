@@ -5,7 +5,7 @@ import {
   PopoverTrigger,
   Separator,
 } from "../interfaces";
-import { MoonIcon, SunIcon, User2 } from "lucide-react";
+import { User2 } from "lucide-react";
 import { Arrow } from "@radix-ui/react-popover";
 import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";

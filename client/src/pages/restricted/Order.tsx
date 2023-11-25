@@ -1,25 +1,32 @@
-import React, { useState, useEffect, ChangeEvent } from "react";
+import React, { useState, ChangeEvent } from "react";
 import { Input, Button, Label, Separator, useToast } from "../../interfaces";
 import { useProduct } from "../../context/ProductContext";
 import CartItem from "../../components/cart/CartItem";
 import CartSummary from "../../components/cart/CartSummary";
 import { useNavigate } from "react-router-dom";
 import UserCredientials from "../../components/UserCredientials";
+import axios from "axios";
+import { useAuth } from "../../context/AuthContext";
 
 const Order = () => {
+  const { uid, currentUser } = useAuth();
   const [payDetile, setPayDetile] = useState({
     name: "",
     number: "",
     date: "",
     cvc: "",
   });
-  const { getAllCartProducts, cart }: any = useProduct();
-  const { toast } = useToast();
-  const naviagete = useNavigate();
+  const [details, setDetailse] = useState({
+    name: currentUser.name,
+    email: currentUser.email,
+    phone: currentUser.phone as string,
+    address: currentUser.address as string,
+  });
 
-  useEffect(() => {
-    getAllCartProducts();
-  }, []);
+  const { cart, setCart } = useProduct();
+  const { toast } = useToast();
+
+  const naviagete = useNavigate();
 
   const handlePayDetaile = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -28,20 +35,34 @@ const Order = () => {
 
   const handleOrder = async () => {
     const pay = Object.values(payDetile).filter((item) => item !== "");
-
-    if (pay.length < 4) {
-      toast({ title: "⚠️ Please fillup all the filds" });
-    } else {
-      const data = await fetch("/api/v1/products/order-product", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ items: cart, pay: payDetile }),
+    try {
+      if (pay.length < 4 || !details.address || !details.phone) {
+        toast({ title: "⚠️ Please fillup all the filds" });
+      } else {
+        const data = { payment: payDetile, details };
+        const response = await axios.post(
+          "/api/v1/products/order-product",
+          data,
+          {
+            headers: {
+              Authorization: `Bearer ${uid}`,
+            },
+          }
+        );
+        if (response.status == 201) {
+          toast({ title: "Order placed successfully 🥳" });
+          setTimeout(() => {
+            setCart([]);
+            naviagete("/");
+          }, 1000);
+        }
+      }
+    } catch (error) {
+      console.log(error);
+      toast({
+        title: "Something went wrong. Try again",
+        variant: "destructive",
       });
-      const res = await data.json();
-      res?._id && toast({ title: "Order placed successfully 🥳" });
-      res?._id && naviagete("/grocery");
     }
   };
   return (
@@ -49,7 +70,11 @@ const Order = () => {
       <main className="flex items-start justify-center my-16">
         <section className="mr-20 w-[600px]">
           <h2 className="text-2xl font-semibold mb-6">User Information</h2>
-          <UserCredientials isDisabled={false} />
+          <UserCredientials
+            isDisabled={false}
+            state={details}
+            setState={setDetailse}
+          />
           <h2 className="text-2xl font-semibold mb-6 mt-10">Payment details</h2>
           <div className="space-y-3">
             <div className="space-y-2">
@@ -98,15 +123,16 @@ const Order = () => {
 
         <section className="flex flex-col items-start justify-between space-y-8 mb-20">
           <div className="mt-8 w-[480px]">
-            <ul role="list" className="-my-6 divide-y divide-gray-200">
-              {cart.map((product: any) => (
-                <CartItem data={product} />
-              ))}
-            </ul>
+            {cart.map((item: any) => (
+              <>
+                <CartItem item={item} />
+                <Separator className="my-4" />
+              </>
+            ))}
           </div>
 
           <div className="w-[480px]">
-            <CartSummary className="w-full" data={cart} />
+            <CartSummary className="w-full" />
             <div className="mt-6">
               <Button
                 className="w-full !py-5 font-bold shadow-sm"

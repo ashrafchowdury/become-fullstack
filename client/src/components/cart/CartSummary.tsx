@@ -1,16 +1,12 @@
 import { cn } from "../../lib/utils";
+import { useProduct } from "../../context/ProductContext";
 
-const CartSummary = ({
-  className,
-  data,
-}: {
-  className?: string;
-  data: any;
-}) => {
+const CartSummary = ({ className }: { className?: string }) => {
+  const { cart } = useProduct();
   const productAmount = () => {
-    return data.reduce(
-      (total: any, product: any) =>
-        total + Number(product?.price?.substring(1)) * product?.quantity,
+    return cart.reduce(
+      (total: any, item: any) =>
+        total + Number(item?.product?.price?.substring(1)) * item?.quantity,
       0
     );
   };

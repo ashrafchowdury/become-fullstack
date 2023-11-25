@@ -16,7 +16,7 @@ const Home = () => {
 
       <section className="mt-20 ">
         <h2 className=" font-bold text-2xl mb-8">Products</h2>
-        <div className="flex flex-wrap items-center justify-center md:-ml-3">
+        <div className="flex flex-wrap items-center justify-start md:-ml-3">
           {products.map((product: any) => (
             <Product product={product} />
           ))}

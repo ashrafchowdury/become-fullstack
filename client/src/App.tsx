@@ -27,7 +27,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="*" element={<NotFound />} />
-            <Route path="/grocery/product/:id" element={<Detaile />} />
+            <Route path="/product/:id" element={<Detaile />} />
 
             {/** Protected Routes **/}
             <Route
@@ -39,7 +39,7 @@ function App() {
               element={uid ? <AddNewProduct /> : <Navigate to="/" />}
             />
             <Route
-              path="/grocery/order"
+              path="/order"
               element={uid ? <Order /> : <Navigate to="/" />}
             />
           </Routes>

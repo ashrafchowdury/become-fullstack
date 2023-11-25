@@ -1,4 +1,3 @@
-import React, { useState, useEffect } from "react";
 import {
   Sheet,
   SheetClose,
@@ -16,17 +15,9 @@ import { useProduct } from "../context/ProductContext";
 import CartItem from "./cart/CartItem";
 import CartSummary from "./cart/CartSummary";
 import { Link } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
 
 export default function AddToCart() {
-  const { getAllCartProducts, cart }: any = useProduct();
-  const { uid } = useAuth();
-
-  useEffect(() => {
-    if (Boolean(uid)) {
-      getAllCartProducts();
-    }
-  }, [uid]);
+  const { cart } = useProduct();
 
   return (
     <Sheet>
@@ -45,9 +36,9 @@ export default function AddToCart() {
 
         <section className="mt-5 w-full h-[64%] overflow-hidden overflow-y-auto">
           <ul role="list">
-            {cart?.map((product: any) => (
+            {cart?.map((item: any) => (
               <>
-                <CartItem data={product} />
+                <CartItem item={item} />
                 <Separator className="my-4" />
               </>
             ))}
@@ -56,9 +47,9 @@ export default function AddToCart() {
 
         {cart?.length > 0 && (
           <section className="w-full">
-            <CartSummary className="w-full" data={cart} />
+            <CartSummary className="w-full" />
             <div className="mt-4">
-              <Link to="/grocery/order">
+              <Link to="/order">
                 <Button className="w-full !py-5 font-bold shadow-sm">
                   Checkout
                 </Button>
@@ -67,7 +58,7 @@ export default function AddToCart() {
             <div className="mt-3 flex justify-center text-center text-sm text-foreground">
               <p>
                 or
-                <Link to="/grocery" className="ml-1">
+                <Link to="/" className="ml-1">
                   Continue Shopping
                   <span aria-hidden="true"> &rarr;</span>
                 </Link>

@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
-import { MoonIcon, SunIcon, User2 } from "lucide-react";
-import { Button, Popover, PopoverContent, PopoverTrigger } from "../interfaces";
+import { MoonIcon, SunIcon } from "lucide-react";
+import { Button } from "../interfaces";
 import { useTheme } from "next-themes";
 import Register from "./Register";
 import AddToCart from "./AddToCart";
@@ -37,8 +37,7 @@ const Nav = () => {
             <MoonIcon className="w-5 h-5" />
           </Button>
         )}
-
-        <AddToCart />
+        {uid && <AddToCart />}
         {uid ? <NavUserMenu /> : <Register />}
       </div>
     </nav>

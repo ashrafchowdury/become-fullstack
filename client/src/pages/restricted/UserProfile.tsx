@@ -1,15 +1,18 @@
-import React, { useState, useEffect, ChangeEvent } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Button, useToast } from "../../interfaces";
+import { Button } from "../../interfaces";
 import { useAuth } from "../../context/AuthContext";
 import UserCredientials from "../../components/UserCredientials";
 
 const UserProfile = () => {
   const [isEdit, setIsEdit] = useState(true);
-  const { getCurrentUser, currentUser } = useAuth();
-  useEffect(() => {
-    getCurrentUser();
-  }, []);
+  const { currentUser } = useAuth();
+  const [details, setDetailse] = useState({
+    name: currentUser.name,
+    email: currentUser.email,
+    phone: currentUser.phone as string,
+    address: currentUser.address as string,
+  });
 
   return (
     <main className="w-[600px] flex flex-col items-center mx-auto">
@@ -18,7 +21,12 @@ const UserProfile = () => {
         alt="userr image"
         className=" w-28 h-28 rounded-lg object-cover !mb-6 mt-20"
       />
-      <UserCredientials className="w-full" isDisabled={isEdit} />
+      <UserCredientials
+        className="w-full"
+        isDisabled={isEdit}
+        state={details}
+        setState={setDetailse}
+      />
       <div className="w-full flex space-x-2 mt-16">
         {isEdit ? (
           <>

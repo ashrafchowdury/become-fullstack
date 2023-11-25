@@ -1,30 +1,32 @@
-import React, { useState, useEffect, ChangeEvent } from "react";
-import { useNavigate } from "react-router-dom";
-import { Input, Button, Label, useToast } from "../interfaces";
-import { useAuth } from "../context/AuthContext";
+import React from "react";
+import { Input, Button, Label } from "../interfaces";
 import { cn } from "../lib/utils";
+import { useAuth } from "../context/AuthContext";
+
+type StateType = {
+  name: string;
+  email: string;
+  phone: string;
+  address: string;
+};
 
 const UserCredientials = ({
   className,
   isDisabled,
+  state,
+  setState,
 }: {
   className?: string;
   isDisabled: boolean;
+  state: StateType;
+  setState: React.Dispatch<React.SetStateAction<StateType>>;
 }) => {
-  const [info, setInfo] = useState<any>({
-    name: "",
-    email: "",
-    phone: "",
-    address: "",
-    city: "",
-    state: "",
-  });
-  const { isLoading, currentUser } = useAuth();
-
-  const handleInfo = (e: ChangeEvent<HTMLInputElement>) => {
+  const { currentUser } = useAuth();
+  const handleChanges = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setInfo({ ...info, [name]: value });
+    setState({ ...state, [name]: value });
   };
+
   return (
     <section className={cn("w-[600px] space-y-4", className)}>
       <div className="space-y-2">
@@ -32,8 +34,8 @@ const UserCredientials = ({
         <Input
           name="name"
           className="px-4 py-2 w-full"
-          value={info.name}
-          onChange={handleInfo}
+          value={state.name}
+          onChange={handleChanges}
           disabled={isDisabled}
           placeholder="Add you real Name"
         />
@@ -43,8 +45,8 @@ const UserCredientials = ({
         <Input
           name="email"
           className="px-4 py-2 w-full"
-          value={info.email}
-          onChange={handleInfo}
+          value={state.email}
+          onChange={handleChanges}
           disabled={isDisabled}
           placeholder="Contact Email"
         />
@@ -55,47 +57,22 @@ const UserCredientials = ({
           type="phone"
           name="phone"
           className="px-4 py-2 w-full"
-          value={info.phone}
-          onChange={handleInfo}
+          value={state.phone}
+          onChange={handleChanges}
           disabled={isDisabled}
           placeholder="Active Phone"
         />
       </div>
       <div className="space-y-2">
-        <Label htmlFor="address">Address</Label>
+        <Label htmlFor="address">Full Address</Label>
         <Input
           name="address"
           className="px-4 py-2 w-full"
-          value={info.address}
-          onChange={handleInfo}
+          value={state.address}
+          onChange={handleChanges}
           disabled={isDisabled}
           placeholder="Delivary Address"
         />
-      </div>
-
-      <div className="flex items-center space-x-2 w-full">
-        <div className="space-y-2 w-full">
-          <Label htmlFor="city">City</Label>
-          <Input
-            name="city"
-            className="px-4 py-2"
-            value={info.city}
-            onChange={handleInfo}
-            disabled={isDisabled}
-            placeholder="City name"
-          />
-        </div>
-        <div className="space-y-2 w-full">
-          <Label htmlFor="city">State</Label>
-          <Input
-            name="state"
-            className="px-4 py-2"
-            value={info.state}
-            onChange={handleInfo}
-            disabled={isDisabled}
-            placeholder="State in city"
-          />
-        </div>
       </div>
     </section>
   );
