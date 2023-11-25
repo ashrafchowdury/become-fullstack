@@ -22,7 +22,7 @@ const orderSchema = new mongoose.Schema({
   user: { type: mongoose.Schema.Types.ObjectId, ref: "Users" },
   products: [
     {
-      product: { type: mongoose.Schema.Types.ObjectId, ref: "Carts" },
+      product: { type: mongoose.Schema.Types.ObjectId, ref: "Products" },
       quantity: { type: Number, default: 1 },
     },
   ],

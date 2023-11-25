@@ -119,6 +119,18 @@ const orderProducts = async (req, res) => {
   }
 };
 
+const orderHistory = async (req, res) => {
+  const userId = req.user._id;
+  try {
+    const history = await ORDER.find({ user: userId }).populate(
+      "products.product"
+    );
+    res.status(200).json(history);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
 module.exports = {
   getAllProducts,
   getCartProducts,
@@ -126,4 +138,5 @@ module.exports = {
   deleteCartProduct,
   orderProducts,
   addNewProducts,
+  orderHistory,
 };

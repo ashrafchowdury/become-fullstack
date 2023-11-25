@@ -28,7 +28,10 @@ const NavUserMenu = () => {
         <Link to="/profile/1" className="text-sm font-semibold text-foreground">
           Profile
         </Link>
-        <Link to="/" className="text-sm font-semibold text-foreground">
+        <Link
+          to="/order-history"
+          className="text-sm font-semibold text-foreground"
+        >
           Order History
         </Link>
 

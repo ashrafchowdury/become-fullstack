@@ -9,6 +9,7 @@ import AddNewProduct from "./pages/restricted/AddNewProduct";
 import ProductContextProvider from "./context/ProductContext";
 import UserProfile from "./pages/restricted/UserProfile";
 import NotFound from "./pages/NotFound";
+import OrderHistory from "./pages/restricted/OrderHistory";
 import { useAuth } from "./context/AuthContext";
 
 function App() {
@@ -42,6 +43,7 @@ function App() {
               path="/order"
               element={uid ? <Order /> : <Navigate to="/" />}
             />
+            <Route path="/order-history" element={<OrderHistory />} />
           </Routes>
         </ProductContextProvider>
         <Toaster />

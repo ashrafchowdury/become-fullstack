@@ -6,6 +6,7 @@ const {
   deleteCartProduct,
   orderProducts,
   addNewProducts,
+  orderHistory,
 } = require("../controllers/productController");
 const { authMiddleware } = require("../middlewares/authMiddleware");
 const router = express.Router();
@@ -18,5 +19,6 @@ router.get("/all-carts", getCartProducts);
 router.post("/add-cart", addNewProductToCart);
 router.delete("/delete-cart/:productId", deleteCartProduct);
 router.post("/order-product", orderProducts);
+router.get("/order-history", orderHistory);
 
 module.exports = router;
