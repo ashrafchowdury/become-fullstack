@@ -16,6 +16,10 @@ type ProductContextType = {
   products: ProductType[];
   cart: ProductType[];
   setCart: React.Dispatch<React.SetStateAction<ProductType[]>>;
+  searchQuery: string;
+  setSearchQuery: React.Dispatch<React.SetStateAction<string>>;
+  searchResult: ProductType[];
+  setsSearchResult: React.Dispatch<React.SetStateAction<ProductType[]>>;
   addCartProduct: (item: ProductType, quantity: number) => void;
   deleteCartProduct: (id: string) => void;
   addNewProduct: ({
@@ -24,6 +28,7 @@ type ProductContextType = {
     description,
     price,
   }: ProductType) => Promise<number | undefined>;
+  searchProducts: (query: string) => void;
 };
 type Children = { children: React.ReactNode };
 
@@ -34,6 +39,8 @@ export const useProduct = () => useContext(ProductContext)!;
 const ProductContextProvider: React.FC<Children> = ({ children }: Children) => {
   const [products, setProducts] = useState<ProductType[]>([]);
   const [cart, setCart] = useState<ProductType[]>([]);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchResult, setsSearchResult] = useState<ProductType[]>([]);
   const { toast } = useToast();
   const { uid, currentUser } = useAuth();
 
@@ -72,6 +79,23 @@ const ProductContextProvider: React.FC<Children> = ({ children }: Children) => {
         console.log(error);
         toast({ title: "Something Went Wrong!", variant: "destructive" });
       }
+    }
+  };
+  // Search Product
+  const searchProducts = async (query: string) => {
+    if (query.length < 2) return;
+    try {
+      const response = await axios.get(
+        `/api/v1/products/search?keyword=${query}`,
+        {
+          headers: {
+            Authorization: `Baeer ${uid}`,
+          },
+        }
+      );
+      response.status == 200 && setsSearchResult(response.data);
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -151,6 +175,11 @@ const ProductContextProvider: React.FC<Children> = ({ children }: Children) => {
     addCartProduct,
     deleteCartProduct,
     addNewProduct,
+    searchQuery,
+    setSearchQuery,
+    searchResult,
+    setsSearchResult,
+    searchProducts,
   };
 
   return (

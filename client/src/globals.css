@@ -82,4 +82,7 @@
   *::-webkit-scrollbar-thumb {
     @apply bg-border rounded-[2px];
   }
+  .searchDialog button {
+    @apply hidden;
+  }
 }

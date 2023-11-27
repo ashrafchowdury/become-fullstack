@@ -10,6 +10,7 @@ import ProductContextProvider from "./context/ProductContext";
 import UserProfile from "./pages/restricted/UserProfile";
 import NotFound from "./pages/NotFound";
 import OrderHistory from "./pages/restricted/OrderHistory";
+import SearchedProduct from "./pages/SearchedProduct";
 import { useAuth } from "./context/AuthContext";
 
 function App() {
@@ -29,6 +30,10 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="*" element={<NotFound />} />
             <Route path="/product/:id" element={<Detaile />} />
+            <Route
+              path="/product/search/:query/:productId"
+              element={<SearchedProduct />}
+            />
 
             {/** Protected Routes **/}
             <Route
@@ -43,7 +48,10 @@ function App() {
               path="/order"
               element={uid ? <Order /> : <Navigate to="/" />}
             />
-            <Route path="/order-history" element={<OrderHistory />} />
+            <Route
+              path="/order-history"
+              element={uid ? <OrderHistory /> : <Navigate to="/" />}
+            />
           </Routes>
         </ProductContextProvider>
         <Toaster />

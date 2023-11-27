@@ -1,5 +1,6 @@
 const { PRODUCTS, CART, ORDER } = require("../models/productSchema");
 
+// Products functions
 const getAllProducts = async (req, res) => {
   try {
     const data = await PRODUCTS.find();
@@ -19,6 +20,27 @@ const addNewProducts = async (req, res) => {
   }
 };
 
+const searchProducts = async (req, res) => {
+  const keyword = req.query.keyword; // user searched keywords
+  try {
+    // Split the keyword into an array of words
+    const keywordsArray = keyword.split(/\s+/).filter(Boolean);
+    // Create an array of regular expressions for each keyword
+    const regexArray = keywordsArray.map((keyword) => new RegExp(keyword, "i"));
+    // Use $or to match any of the regular expressions
+    const products = await PRODUCTS.find({
+      $or: keywordsArray.map((keyword) => ({
+        name: { $regex: new RegExp(keyword, "i") },
+      })),
+    });
+
+    res.status(200).json(products);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+// Carts functions
 const getCartProducts = async (req, res) => {
   try {
     const userId = req.user._id;
@@ -83,6 +105,7 @@ const deleteCartProduct = async (req, res) => {
   }
 };
 
+// Orders functions
 const orderProducts = async (req, res) => {
   const { details, payment } = req.body;
   const userId = req.user._id;
@@ -134,6 +157,7 @@ const orderHistory = async (req, res) => {
 module.exports = {
   getAllProducts,
   getCartProducts,
+  searchProducts,
   addNewProductToCart,
   deleteCartProduct,
   orderProducts,

@@ -4,6 +4,7 @@ import { Button } from "../interfaces";
 import { useTheme } from "next-themes";
 import Register from "./Register";
 import AddToCart from "./AddToCart";
+import SearchBar from "./SearchBar";
 import NavUserMenu from "./NavUserMenu";
 import { useAuth } from "../context/AuthContext";
 
@@ -28,6 +29,7 @@ const Nav = () => {
         </Link>
       </div>
       <div className="flex items-center space-x-2">
+        <SearchBar />
         {theme == "dark" ? (
           <Button size="icon" variant="ghost" onClick={() => setTheme("light")}>
             <SunIcon className="w-5 h-5" />
