@@ -1,22 +1,28 @@
 import React, { useState, useEffect } from "react";
 import Product from "../components/Product";
 import { useProduct } from "../context/ProductContext";
-import { useAuth } from "../context/AuthContext";
 import { useParams } from "react-router-dom";
 import { Button } from "../interfaces";
 import { ShoppingCart, PlusIcon, Minus } from "lucide-react";
 
 const SearchedProduct = () => {
   const [productCounter, setProductCounter] = useState(1);
-  const { addCartProduct, searchResult, searchProducts } = useProduct();
-  const { uid } = useAuth();
+  const {
+    addCartProduct,
+    searchResult,
+    getSearchedProducts,
+    setsSearchResult,
+  } = useProduct();
   const { productId, query } = useParams();
-
   useEffect(() => {
-    if (searchResult.length == 0 && query && uid) {
-      searchProducts(query as string);
-    }
-  }, [query, uid]);
+    const handleSearchResult = async () => {
+      if (searchResult.length == 0 && query) {
+        const data = await getSearchedProducts(query as string);
+        setsSearchResult(data);
+      }
+    };
+    handleSearchResult();
+  }, [query]);
 
   return (
     <>
@@ -97,15 +103,19 @@ const SearchedProduct = () => {
           ))}
       </main>
 
-      <h2 className="font-bold text-2xl mt-24 mb-8">Related Prodcuts</h2>
-      <section className="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8 !mb-12">
-        {searchResult
-          .filter((item) => productId !== item._id)
-          .slice(0, 4)
-          .map((item) => (
-            <Product product={item} />
-          ))}
-      </section>
+      {searchResult.length > 0 && (
+        <>
+          <h2 className="font-bold text-2xl mt-24 mb-8">Related Prodcuts</h2>
+          <section className="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8 !mb-12">
+            {searchResult
+              .filter((item) => productId !== item._id)
+              .slice(0, 4)
+              .map((item) => (
+                <Product product={item} />
+              ))}
+          </section>
+        </>
+      )}
     </>
   );
 };

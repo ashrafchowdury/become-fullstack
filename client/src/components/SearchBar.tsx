@@ -6,18 +6,29 @@ import {
   DialogTrigger,
   Input,
   Separator,
+  DialogFooter,
+  DialogClose,
 } from "../interfaces";
 import { SearchIcon, MoveRightIcon } from "lucide-react";
 import { Link } from "react-router-dom";
-import { useProduct } from "../context/ProductContext";
+import { useProduct, ProductType } from "../context/ProductContext";
 
 const SearchBar = () => {
   const [searchQuery, setSearchQuery] = useState("");
-  const { searchResult, searchProducts } = useProduct();
+  const [searchProducts, setSearchProducts] = useState<ProductType[]>([]);
+  const { getSearchedProducts, setsSearchResult, products } = useProduct();
 
+  const handleGetSearchResult = async () => {
+    const data = await getSearchedProducts(searchQuery);
+    if (data.length > 0) {
+      setSearchProducts(data);
+    }
+  };
+  const viewProducts =
+    searchProducts.length > 0 ? searchProducts : products.slice(0, 3);
   return (
     <>
-      <Dialog>
+      <Dialog onOpenChange={() => setSearchProducts([])}>
         <DialogTrigger asChild>
           <Button size="icon" className="w-8 h-8" variant="ghost">
             <SearchIcon className="w-5 h-5" />
@@ -34,36 +45,44 @@ const SearchBar = () => {
             <Button
               size="icon"
               className="w-12 h-[41px] !flex ml-2"
-              onClick={() => searchProducts(searchQuery)}
+              onClick={handleGetSearchResult}
             >
               <SearchIcon className="w-5 h-5" />
             </Button>
           </div>
-          <p className="opacity-70 mb-3 text-sm">Search Result</p>
-          <section className="flex flex-col">
-            {searchResult.map((item) => (
-              <Link to={`/product/search/${searchQuery}/${item._id}`}>
-                <div className="group/item w-full flex items-center">
-                  <img
-                    src={item.imageSrc}
-                    alt={item.name}
-                    className="w-10 h-10 rounded-lg mr-3"
-                  />
-                  <div className="w-full flex items-center justify-between">
-                    <div>
-                      <p className="font-semibold">{item.name}</p>
-                      <p className="text-sm">{item.price}</p>
+
+          <DialogFooter className="!block">
+            <p className="opacity-70 mb-3 text-sm">Search Result</p>
+            <section className="flex flex-col">
+              {viewProducts.map((item) => (
+                <Link
+                  to={`/product/search/${searchQuery}/${item._id}`}
+                  onClick={() => setsSearchResult(searchProducts)}
+                >
+                  <DialogClose className="!block">
+                    <div className="group/item w-full flex items-center">
+                      <img
+                        src={item.imageSrc}
+                        alt={item.name}
+                        className="w-10 h-10 rounded-lg mr-3"
+                      />
+                      <div className="w-full flex items-center justify-between">
+                        <div>
+                          <p className="font-semibold">{item.name}</p>
+                          <p className="text-sm text-start">{item.price}</p>
+                        </div>
+                        <p className="text-xs flex items-center">
+                          View Product{" "}
+                          <MoveRightIcon className="w-4 h-4 ml-1 group-hover/item:translate-x-2 duration-300" />
+                        </p>
+                      </div>
                     </div>
-                    <p className="text-xs flex items-center">
-                      View Product{" "}
-                      <MoveRightIcon className="w-4 h-4 ml-1 group-hover/item:translate-x-2 duration-300" />
-                    </p>
-                  </div>
-                </div>
-                <Separator className="w-full my-4" />
-              </Link>
-            ))}
-          </section>
+                    <Separator className="w-full my-4" />
+                  </DialogClose>
+                </Link>
+              ))}
+            </section>
+          </DialogFooter>
         </DialogContent>
       </Dialog>
     </>

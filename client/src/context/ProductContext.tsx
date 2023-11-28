@@ -28,7 +28,7 @@ type ProductContextType = {
     description,
     price,
   }: ProductType) => Promise<number | undefined>;
-  searchProducts: (query: string) => void;
+  getSearchedProducts: (query: string) => Promise<ProductType[]>;
 };
 type Children = { children: React.ReactNode };
 
@@ -47,11 +47,7 @@ const ProductContextProvider: React.FC<Children> = ({ children }: Children) => {
   // Get All Display Products
   const getAllProducts = async () => {
     try {
-      const response = await axios.get("/api/v1/products/all-products", {
-        headers: {
-          Authorization: `Bearer ${uid}`,
-        },
-      });
+      const response = await axios.get("/api/v1/products/all-products");
       response.status == 200 && setProducts(response.data);
     } catch (error) {
       console.log(error);
@@ -82,18 +78,15 @@ const ProductContextProvider: React.FC<Children> = ({ children }: Children) => {
     }
   };
   // Search Product
-  const searchProducts = async (query: string) => {
+  const getSearchedProducts = async (query: string) => {
     if (query.length < 2) return;
     try {
       const response = await axios.get(
-        `/api/v1/products/search?keyword=${query}`,
-        {
-          headers: {
-            Authorization: `Baeer ${uid}`,
-          },
-        }
+        `/api/v1/products/search?keyword=${query}`
       );
-      response.status == 200 && setsSearchResult(response.data);
+      if (response.status == 200) {
+        return response.data;
+      }
     } catch (error) {
       console.log(error);
     }
@@ -179,7 +172,7 @@ const ProductContextProvider: React.FC<Children> = ({ children }: Children) => {
     setSearchQuery,
     searchResult,
     setsSearchResult,
-    searchProducts,
+    getSearchedProducts,
   };
 
   return (
