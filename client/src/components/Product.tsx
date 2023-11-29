@@ -6,9 +6,9 @@ const Product = ({ product }: { product: ProductType }) => {
     <Link
       key={product._id}
       to={`/product/${product._id}`}
-      className="group m-4"
+      className="group m-2 lg:m-4"
     >
-      <div className="aspect-h-1 aspect-w-1 w-[280px] h-[280px] overflow-hidden rounded-lg xl:aspect-h-8 xl:aspect-w-7">
+      <div className=" sm:w-[200px] md:w-[228px] lg:w-[312px] xl:w-[283px] sm:h-[200px] md:h-[228px] lg:h-[312px] xl:h-[283px] overflow-hidden rounded-lg">
         <img
           src={product.imageSrc}
           alt={product.name}

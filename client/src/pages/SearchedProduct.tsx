@@ -103,7 +103,7 @@ const SearchedProduct = () => {
           ))}
       </main>
 
-      {searchResult.length > 0 && (
+      {searchResult.length > 1 && (
         <>
           <h2 className="font-bold text-2xl mt-24 mb-8">Related Prodcuts</h2>
           <section className="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8 !mb-12">

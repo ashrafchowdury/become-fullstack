@@ -17,7 +17,7 @@ const Nav = () => {
         <h1 className="text-2xl font-bold">Asthetic</h1>
       </Link>
 
-      <div className="flex items-center justify-center space-x-8">
+      <div className="lg:flex items-center justify-center space-x-8 hidden">
         <Link to="/grocery" className="text-sm opacity-90 font-medium">
           Home
         </Link>
