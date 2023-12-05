@@ -1,4 +1,4 @@
-const { PRODUCTS, CART, ORDER } = require("../models/productSchema");
+const { PRODUCTS, CART } = require("../models/productSchema");
 
 // Products functions
 const getAllProducts = async (req, res) => {
@@ -105,62 +105,11 @@ const deleteCartProduct = async (req, res) => {
   }
 };
 
-// Orders functions
-const orderProducts = async (req, res) => {
-  const { details, payment } = req.body;
-  const userId = req.user._id;
-  try {
-    const cart = await CART.findOne({ user: userId }).populate(
-      "products.product"
-    );
-
-    // Calculate total price
-    const tax = 5;
-    const totalPrice = cart.products.reduce(
-      (total, item) =>
-        total +
-        Number(item?.product?.price?.substring(1)) * item?.quantity +
-        tax,
-      0
-    );
-
-    const newOrder = await ORDER.create({
-      user: userId,
-      products: cart.products,
-      total: totalPrice,
-      address: details.address,
-      phone: details.phone,
-      orderDate: new Date().getDate(),
-    });
-
-    // Clear the user's cart after placing the order
-    cart.products = [];
-    await cart.save();
-    res.status(201).json(newOrder);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-};
-
-const orderHistory = async (req, res) => {
-  const userId = req.user._id;
-  try {
-    const history = await ORDER.find({ user: userId }).populate(
-      "products.product"
-    );
-    res.status(200).json(history);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-};
-
 module.exports = {
   getAllProducts,
   getCartProducts,
   searchProducts,
   addNewProductToCart,
   deleteCartProduct,
-  orderProducts,
   addNewProducts,
-  orderHistory,
 };

@@ -27,7 +27,7 @@ const OrderHistory = () => {
   useEffect(() => {
     const getOrderHistoryData = async () => {
       try {
-        const response = await axios.get("/api/v1/products/order-history", {
+        const response = await axios.get("/api/v1/order/history", {
           headers: {
             Authorization: `Bearer ${uid}`,
           },

@@ -11,6 +11,7 @@ import UserProfile from "./pages/restricted/UserProfile";
 import NotFound from "./pages/NotFound";
 import OrderHistory from "./pages/restricted/OrderHistory";
 import SearchedProduct from "./pages/SearchedProduct";
+import OrderConfirme from "./pages/restricted/OrderConfirme";
 import { useAuth } from "./context/AuthContext";
 
 function App() {
@@ -51,6 +52,10 @@ function App() {
             <Route
               path="/order-history"
               element={uid ? <OrderHistory /> : <Navigate to="/" />}
+            />
+            <Route
+              path="/order-confirme/:info"
+              element={uid ? <OrderConfirme /> : <Navigate to="/" />}
             />
           </Routes>
         </ProductContextProvider>

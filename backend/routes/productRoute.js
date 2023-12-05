@@ -4,25 +4,23 @@ const {
   getCartProducts,
   addNewProductToCart,
   deleteCartProduct,
-  orderProducts,
   addNewProducts,
-  orderHistory,
   searchProducts,
 } = require("../controllers/productController");
 const { authMiddleware } = require("../middlewares/authMiddleware");
 const router = express.Router();
 
-// Routes
+// Global Routes
 router.get("/all-products", getAllProducts);
 router.get("/search", searchProducts);
+
 // Auth middleware
 router.use(authMiddleware);
+
 // Protected routes
 router.post("/add-product", addNewProducts);
 router.get("/all-carts", getCartProducts);
 router.post("/add-cart", addNewProductToCart);
 router.delete("/delete-cart/:productId", deleteCartProduct);
-router.post("/order-product", orderProducts);
-router.get("/order-history", orderHistory);
 
 module.exports = router;

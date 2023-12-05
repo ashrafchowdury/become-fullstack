@@ -29,6 +29,9 @@ dependencies:
   mongoose:
     specifier: ^7.5.2
     version: 7.5.2
+  stripe:
+    specifier: ^14.5.0
+    version: 14.5.0
   uuid:
     specifier: ^9.0.1
     version: 9.0.1
@@ -1427,6 +1430,17 @@ packages:
     engines: { node: ">=8" }
     dependencies:
       ansi-regex: 5.0.1
+    dev: false
+
+  /stripe@14.5.0:
+    resolution:
+      {
+        integrity: sha512-MTt0P0VYDAj2VZyZMW41AxcXVs9s06EDFIHYat4UUkluJgnBHo4T4E2byPhnxoJCPvdzWBwBLnhWbSOg//VTpA==,
+      }
+    engines: { node: ">=12.*" }
+    dependencies:
+      "@types/node": 20.6.3
+      qs: 6.11.0
     dev: false
 
   /tar@6.2.0:
