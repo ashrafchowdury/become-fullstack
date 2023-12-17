@@ -1,9 +1,17 @@
 const { PRODUCTS, CART } = require("../models/productSchema");
+const client = require("../lib/redis");
 
 // Products functions
 const getAllProducts = async (req, res) => {
   try {
+    const cacheValue = await client.get("all-products");
+    if (cacheValue) {
+      res.status(200).json(JSON.parse(cacheValue));
+      return;
+    }
     const data = await PRODUCTS.find();
+    await client.set("all-products", JSON.stringify(data));
+    await client.expire("all-products", 300);
     res.status(200).json(data);
   } catch (error) {
     res.status(400).json({ message: error.message });
