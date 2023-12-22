@@ -1,6 +1,7 @@
 const USER = require("../models/userSchema");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
+const client = require("../libs/redis");
 
 const createToken = (_id) => {
   return jwt.sign({ _id }, process.env.JWT_SECRET_KEY, { expiresIn: "3d" });
@@ -9,7 +10,14 @@ const createToken = (_id) => {
 const getCurrentUser = async (req, res) => {
   try {
     const id = req.user._id;
+    const isCacheUser = await client.get(`currentUser:${id}`);
+    if (isCacheUser) {
+      res.status(200).json([]);
+      return;
+    }
     const data = await USER.findOne({ _id: id });
+    await client.set(`currentUser:${id}`, data);
+    await client.expire(`currentUser:${id}`, 3000);
     res.status(200).json(data);
   } catch (error) {
     res.status(400).json({ error: `User: ${error.message}` });

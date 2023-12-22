@@ -1,5 +1,5 @@
 const { PRODUCTS, CART } = require("../models/productSchema");
-const client = require("../lib/redis");
+const client = require("../libs/redis");
 
 // Products functions
 const getAllProducts = async (req, res) => {
