@@ -1,15 +1,57 @@
-import React, { useState } from "react";
+import { useState, useEffect } from "react";
 import Product from "../components/Product";
 import { useProduct } from "../context/ProductContext";
 import { useLocation } from "react-router-dom";
 import { Button } from "../interfaces";
-import { ShoppingCart, PlusIcon, Minus } from "lucide-react";
+import {
+  ShoppingCart,
+  PlusIcon,
+  Minus,
+  ThumbsUp,
+  ThumbsDown,
+} from "lucide-react";
+import Avatar from "../components/Avatar";
+import ReviewProduct from "../components/ReviewProduct";
+import axios from "axios";
+import { useAuth } from "../context/AuthContext";
+import { AuthUserType } from "../context/AuthContext";
+import { StarReview } from "../components/ReviewProduct";
 
+type ProductReviewTypes = {
+  date: string;
+  review: string;
+  rate: number;
+  productId: string;
+  user: AuthUserType;
+};
 const Detaile = () => {
   const [productCounter, setProductCounter] = useState(1);
+  const [productReviews, setProductReviews] = useState<ProductReviewTypes[]>(
+    []
+  );
   const { products, addCartProduct } = useProduct();
   const route = useLocation();
   const productId = route.pathname.split("/")[2];
+  const { uid } = useAuth();
+
+  useEffect(() => {
+    const getProductReviews = async () => {
+      try {
+        const response = await axios.get(
+          `/api/v1/product/reviews/${productId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${uid}`,
+            },
+          }
+        );
+        setProductReviews(response.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    productId && uid ? getProductReviews() : null;
+  }, [uid]);
 
   return (
     <>
@@ -98,6 +140,42 @@ const Detaile = () => {
           .map((item) => (
             <Product product={item} />
           ))}
+      </section>
+
+      <h2 className="font-bold text-2xl mt-24 mb-8">Prodcut Reviews</h2>
+      <ReviewProduct productId={productId} />
+
+      <section className="!mb-12">
+        {productReviews.map((item) => (
+          <div className="p-6 border rounded-lg my-5">
+            <div className="w-full flex items-center justify-between">
+              <div>
+                <p className="text-sm">{new Date(item.date).toDateString()}</p>
+                <div className="-ml-1 mt-1">
+                  <StarReview
+                    rating={item.rate}
+                    isFixed={true}
+                    className="w-4 h-4"
+                  />
+                </div>
+              </div>
+              <div className="flex items-center space-x-3">
+                <ThumbsUp className="w-4 h-4" />
+                <ThumbsDown className="w-4 h-4" />
+              </div>
+            </div>
+
+            <div className="w-full flex items-center space-x-3 mt-5 mb-2">
+              <Avatar
+                img="https://avatars.githubusercontent.com/u/87828904?v=4"
+                fallback={item.user.name}
+                className="w-6 h-6"
+              />
+              <p className="text-normal">{item.user.name}</p>
+            </div>
+            <p>{item.review}</p>
+          </div>
+        ))}
       </section>
     </>
   );

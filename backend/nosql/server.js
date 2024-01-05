@@ -3,6 +3,7 @@ const app = express();
 const authRoute = require("./routes/authRoute");
 const productRoute = require("./routes/productRoute");
 const orderRoute = require("./routes/orderRoute");
+const reviewRoute = require("./routes/reviewRoute.routes");
 const {
   errorMiddleware,
   globalErrorMiddleware,
@@ -19,6 +20,7 @@ app.use(helmet());
 // routes
 app.use("/api/v1/auth", authRoute);
 app.use("/api/v1/products", productRoute);
+app.use("/api/v1/product/reviews", reviewRoute);
 app.use("/api/v1/order", orderRoute);
 
 // error middleware

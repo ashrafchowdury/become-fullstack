@@ -58,6 +58,19 @@ import {
   SheetTitle,
   SheetDescription,
 } from "./sheet";
+import {
+  Drawer,
+  DrawerPortal,
+  DrawerOverlay,
+  DrawerTrigger,
+  DrawerClose,
+  DrawerContent,
+  DrawerHeader,
+  DrawerFooter,
+  DrawerTitle,
+  DrawerDescription,
+} from "./drawer";
+import { Avatar, AvatarImage, AvatarFallback } from "./avatar";
 
 export {
   Button,
@@ -115,4 +128,17 @@ export {
   SheetFooter,
   SheetTitle,
   SheetDescription,
+  Drawer,
+  DrawerPortal,
+  DrawerOverlay,
+  DrawerTrigger,
+  DrawerClose,
+  DrawerContent,
+  DrawerHeader,
+  DrawerFooter,
+  DrawerTitle,
+  DrawerDescription,
+  Avatar,
+  AvatarImage,
+  AvatarFallback,
 };

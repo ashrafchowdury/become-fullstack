@@ -48,9 +48,7 @@ const OrderConfirme = () => {
     };
     userInfo.length > 2 && clearCart();
   }, [params, isOrdered]);
-  console.log(isOrdered);
 
-  // location.pathname.includes("success")
   return (
     <>
       <section className="flex flex-col items-center absolute top-[50%] left-[50%] transform translate-x-[-50%] translate-y-[-50%]">
