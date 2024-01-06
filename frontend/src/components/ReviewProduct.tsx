@@ -14,8 +14,10 @@ import {
 } from "../interfaces";
 import axios from "axios";
 import { useAuth } from "../context/AuthContext";
+import { useProduct } from "../context/ProductContext";
 import { StarIcon } from "lucide-react";
 import { cn } from "../lib/utils";
+import { useNavigate } from "react-router-dom";
 
 type ReviewProductProps = {
   productId: string;
@@ -24,6 +26,8 @@ const ReviewProduct = ({ productId }: ReviewProductProps) => {
   const [review, setReview] = useState("");
   const [rating, setRating] = useState(4);
   const { uid } = useAuth();
+  const { setCart } = useProduct();
+  const navigate = useNavigate();
 
   const addProductReview = async () => {
     const data = {
@@ -33,26 +37,23 @@ const ReviewProduct = ({ productId }: ReviewProductProps) => {
       review,
     };
     try {
-      const response = await axios.post(
-        `/api/v1/product/reviews/new-review`,
-        data,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${uid}`,
-          },
-        }
-      );
+      await axios.post(`/api/v1/product/reviews/new-review`, data, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${uid}`,
+        },
+      });
+      setCart([]);
+      setTimeout(() => {
+        navigate("/");
+      }, 1000);
     } catch (error) {
       console.log(error);
     }
   };
 
   return (
-    <Drawer>
-      <DrawerTrigger>
-        <Button>Add Reviews</Button>
-      </DrawerTrigger>
+    <Drawer open={Boolean(productId)} onClose={() => navigate("/")}>
       <DrawerContent className="">
         <div className="mx-auto w-[600px] my-10">
           <DrawerHeader>
@@ -78,7 +79,11 @@ const ReviewProduct = ({ productId }: ReviewProductProps) => {
               Submit
             </Button>
             <DrawerClose className="w-full mt-1">
-              <Button variant="outline" className="w-full">
+              <Button
+                variant="outline"
+                className="w-full"
+                onClick={() => navigate("/")}
+              >
                 Cancle
               </Button>
             </DrawerClose>

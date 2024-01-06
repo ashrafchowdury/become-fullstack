@@ -1,9 +1,13 @@
-import { Link } from "react-router-dom";
 import Product from "../components/Product";
 import { useProduct } from "../context/ProductContext";
+import { useLocation } from "react-router-dom";
+import ReviewProduct from "../components/ReviewProduct";
 
 const Home = () => {
-  const { products }: any = useProduct();
+  const { products } = useProduct();
+  const location = useLocation();
+  const orderStatus = location.search.split("=");
+
   return (
     <>
       <header className="w-full h-[220px] md:h-[250px] lg:h-[380px] rounded-lg flex overflow-hidden">
@@ -17,11 +21,14 @@ const Home = () => {
       <section className="mt-20 ">
         <h2 className=" font-bold text-2xl mb-8">Products</h2>
         <div className="flex flex-wrap items-center justify-start md:-ml-3">
-          {products.map((product: any) => (
+          {products.map((product) => (
             <Product product={product} />
           ))}
         </div>
       </section>
+      {orderStatus[1]?.includes("succeed") && (
+        <ReviewProduct productId={orderStatus[2]} />
+      )}
     </>
   );
 };

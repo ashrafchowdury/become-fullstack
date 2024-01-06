@@ -11,7 +11,6 @@ import {
   ThumbsDown,
 } from "lucide-react";
 import Avatar from "../components/Avatar";
-import ReviewProduct from "../components/ReviewProduct";
 import axios from "axios";
 import { useAuth } from "../context/AuthContext";
 import { AuthUserType } from "../context/AuthContext";
@@ -50,7 +49,7 @@ const Detaile = () => {
         console.log(error);
       }
     };
-    productId && uid ? getProductReviews() : null;
+    uid && getProductReviews();
   }, [uid]);
 
   return (
@@ -143,9 +142,10 @@ const Detaile = () => {
       </section>
 
       <h2 className="font-bold text-2xl mt-24 mb-8">Prodcut Reviews</h2>
-      <ReviewProduct productId={productId} />
-
       <section className="!mb-12">
+        {productReviews.length == 0 && (
+          <p className="text-normal">No Reviews Found</p>
+        )}
         {productReviews.map((item) => (
           <div className="p-6 border rounded-lg my-5">
             <div className="w-full flex items-center justify-between">
