@@ -3,6 +3,7 @@ const {
   getCurrentUser,
   createAccount,
   login,
+  logout,
 } = require("../controllers/authController");
 const {
   authMiddleware,
@@ -15,5 +16,6 @@ const router = express.Router();
 router.get("/user", authMiddleware, getCurrentUser);
 router.post("/signup", signupVlidation, createAccount);
 router.post("/login", loginVlidation, login);
+router.delete("/logout", authMiddleware, logout);
 
 module.exports = router;

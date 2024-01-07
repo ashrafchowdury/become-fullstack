@@ -8,16 +8,24 @@ const createToken = (_id) => {
 };
 
 const getCurrentUser = async (req, res) => {
+  const id = req.user._id;
   try {
-    const id = req.user._id;
-    const isCacheUser = await client.get(`currentUser:${id}`);
+    // get cached user data from redis
+    const isCacheUser = await client.hgetall(`currentUser:${id}`);
     if (isCacheUser) {
-      res.status(200).json([]);
+      res.status(200).json(isCacheUser);
       return;
     }
+
     const data = await USER.findOne({ _id: id });
-    await client.set(`currentUser:${id}`, data);
-    await client.expire(`currentUser:${id}`, 3000);
+    // caching user data to redis
+    await client.hset(`currentUser:${id}`, {
+      _id: id,
+      name: data.name,
+      email: data.email,
+      password: data.password,
+    });
+
     res.status(200).json(data);
   } catch (error) {
     res.status(400).json({ error: `User: ${error.message}` });
@@ -48,4 +56,16 @@ const login = async (req, res) => {
   }
 };
 
-module.exports = { getCurrentUser, createAccount, login };
+const logout = async (req, res) => {
+  const userId = req.user._id;
+  try {
+    // expired user from redis
+    await client.expire(`currentUser:${userId}`, 0);
+
+    res.status(200).json("User has been logout successfully");
+  } catch (error) {
+    res.status(400).end("Something went wrong!");
+  }
+};
+
+module.exports = { getCurrentUser, createAccount, login, logout };

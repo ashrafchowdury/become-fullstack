@@ -100,8 +100,21 @@ const AuthContextProvider: React.FC<Children> = ({ children }: Children) => {
   };
 
   const logout = async () => {
-    Cookies.remove("authId");
-    setUid("");
+    try {
+      await axios.delete("/api/v1/auth/logout", {
+        headers: {
+          Authorization: `Bearer ${uid}`,
+        },
+      });
+      Cookies.remove("authId");
+      setUid("");
+    } catch (error) {
+      console.log(error);
+      toast({
+        title: `Something went wrong. Try again`,
+        variant: "destructive",
+      });
+    }
   };
 
   //effects
