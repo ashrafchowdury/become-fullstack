@@ -12,7 +12,7 @@ const getCurrentUser = async (req, res) => {
   try {
     // get cached user data from redis
     const isCacheUser = await client.hgetall(`currentUser:${id}`);
-    if (isCacheUser) {
+    if (isCacheUser.email) {
       res.status(200).json(isCacheUser);
       return;
     }
@@ -25,10 +25,10 @@ const getCurrentUser = async (req, res) => {
       email: data.email,
       password: data.password,
     });
-
+    await client.expire(`currentUser:${id}`, "900");
     res.status(200).json(data);
   } catch (error) {
-    res.status(400).json({ error: `User: ${error.message}` });
+    res.status(400).end({ error: `User: ${error.message}` });
   }
 };
 

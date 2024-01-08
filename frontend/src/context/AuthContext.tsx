@@ -48,7 +48,7 @@ const AuthContextProvider: React.FC<Children> = ({ children }: Children) => {
           Authorization: `Bearer ${userId}`,
         },
       });
-      response.status == 200 && setCurrentUser(response.data);
+      setCurrentUser(response.data);
     } catch (error) {
       console.log(error);
     }

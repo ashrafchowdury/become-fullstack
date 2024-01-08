@@ -4,14 +4,13 @@ const client = require("../libs/redis");
 // Products functions
 const getAllProducts = async (req, res) => {
   try {
-    const cacheValue = await client.get("all-products");
+    const cacheValue = await client.call("JSON.GET", "all-products");
     if (cacheValue) {
       res.status(200).json(JSON.parse(cacheValue));
       return;
     }
     const data = await PRODUCTS.find();
-    await client.set("all-products", JSON.stringify(data));
-    await client.expire("all-products", 300);
+    await client.call("JSON.SET", "all-products", "$", JSON.stringify(data));
     res.status(200).json(data);
   } catch (error) {
     res.status(400).json({ message: error.message });
@@ -50,11 +49,21 @@ const searchProducts = async (req, res) => {
 
 // Carts functions
 const getCartProducts = async (req, res) => {
+  const userId = req.user._id;
   try {
-    const userId = req.user._id;
+    const cacheValue = await client.call("JSON.GET", `currentUser:cart`);
+    if (cacheValue) {
+      res.status(200).json(JSON.parse(cacheValue));
+      return;
+    }
     const cart = await CART.findOne({ user: userId }).populate(
       "products.product"
     );
+    await client
+      .multi()
+      .call("JSON.SET", `currentUser:cart`, "$", JSON.stringify(cart))
+      .call("expire", `currentUser:cart`, "900")
+      .exec();
     res.status(200).json(!cart ? [] : cart);
   } catch (error) {
     res.status(400).json({ message: error.message });
