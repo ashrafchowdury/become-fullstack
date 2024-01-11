@@ -1,4 +1,4 @@
-const { CART, ORDER } = require("../models/productSchema");
+const { CART, ORDER } = require("../schemas/product.schema");
 const totalPrice = require("../utils/functions/totalPrice");
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 const { v4: uuid } = require("uuid");

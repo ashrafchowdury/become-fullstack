@@ -1,9 +1,9 @@
 const express = require("express");
-const { authMiddleware } = require("../middlewares/authMiddleware");
+const { authMiddleware } = require("../middlewares/auth.middleware");
 const {
   addProductReview,
   getProductReview,
-} = require("../controllers/reviewController");
+} = require("../controllers/review.controller");
 const router = express.Router();
 
 // middlewares

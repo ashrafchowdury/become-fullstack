@@ -6,8 +6,8 @@ const {
   deleteCartProduct,
   addNewProducts,
   searchProducts,
-} = require("../controllers/productController");
-const { authMiddleware } = require("../middlewares/authMiddleware");
+} = require("../controllers/product.controller");
+const { authMiddleware } = require("../middlewares/auth.middleware");
 const router = express.Router();
 
 // Global Routes

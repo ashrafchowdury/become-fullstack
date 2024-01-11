@@ -1,15 +1,15 @@
 const express = require("express");
 const app = express();
-const authRoute = require("./routes/authRoute");
-const productRoute = require("./routes/productRoute");
-const orderRoute = require("./routes/orderRoute");
-const reviewRoute = require("./routes/reviewRoute.routes");
+const authRoute = require("./routes/auth.routes");
+const productRoute = require("./routes/product.routes");
+const orderRoute = require("./routes/order.routes");
+const reviewRoute = require("./routes/review.routes");
 const {
   errorMiddleware,
   globalErrorMiddleware,
-} = require("./middlewares/errorMiddleware");
+} = require("./middlewares/error.middleware");
 const helmet = require("helmet");
-require("./database/mongoDB");
+require("./database/index");
 require("dotenv").config();
 
 // middlewares

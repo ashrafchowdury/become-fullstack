@@ -1,10 +1,10 @@
 const express = require("express");
-const { authMiddleware } = require("../middlewares/authMiddleware");
+const { authMiddleware } = require("../middlewares/auth.middleware");
 const {
   orderProducts,
   orderHistory,
   paymentIntent,
-} = require("../controllers/orderController");
+} = require("../controllers/order.controller");
 const router = express.Router();
 
 // middlewares

@@ -4,12 +4,12 @@ const {
   createAccount,
   login,
   logout,
-} = require("../controllers/authController");
+} = require("../controllers/auth.controller");
 const {
   authMiddleware,
   signupVlidation,
   loginVlidation,
-} = require("../middlewares/authMiddleware");
+} = require("../middlewares/auth.middleware");
 const router = express.Router();
 
 // Routes

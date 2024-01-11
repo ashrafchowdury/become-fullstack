@@ -1,4 +1,4 @@
-const { PRODUCTS, CART } = require("../models/productSchema");
+const { PRODUCTS, CART } = require("../schemas/product.schema");
 const client = require("../libs/redis");
 
 // Products functions
