@@ -1,7 +1,9 @@
+const IP = require("ip");
 const jwt = require("jsonwebtoken");
 const USER = require("../schemas/user.schema");
 const validator = require("validator");
 const bcrypt = require("bcrypt");
+const client = require("../libs/redis");
 
 const authMiddleware = async (req, res, next) => {
   const { authorization } = req.headers;
@@ -36,18 +38,48 @@ const signupVlidation = async (req, res, next) => {
 
 const loginVlidation = async (req, res, next) => {
   const { email, password } = req.body;
-  const user = await USER.findOne({ email });
+  try {
+    const user = await USER.findOne({ email });
 
-  if (!user) {
-    res.status(400).json({ error: "Invalid Email" });
-  }
-  const match = await bcrypt.compare(password, user.password);
-  if (!match) {
-    res.status(400).json({ error: "Invalid Password" });
-  }
+    if (!user) {
+      throw new Error("Invalid Email");
+    }
+    const match = await bcrypt.compare(password, user.password);
+    if (!match) {
+      throw new Error("Invalid Password");
+    }
 
-  req.data = user; // assign data to user object
-  next();
+    req.data = user; // assign data to user object
+    next();
+  } catch (error) {
+    res.status(500).end("Something went wrong: loginVlidation");
+  }
 };
 
-module.exports = { authMiddleware, signupVlidation, loginVlidation };
+const maxTry = async (req, res, next) => {
+  const clientIp = IP.address();
+  try {
+    const hasTried = await client.hget(`maxtry:${clientIp}`, "request");
+
+    // login try for first time
+    if (hasTried === null) {
+      await client.hset(`maxtry:${clientIp}`, { ip: clientIp, request: 1 });
+      await client.expire(`maxtry:${clientIp}`, 480);
+      next();
+      return;
+    }
+
+    // max try 5 times and 8 minute
+    if (hasTried >= 5) {
+      throw new Error("You have reached your limit please try again later");
+    }
+
+    // after first try every try will increament by 1
+    await client.hincrby(`maxtry:${clientIp}`, "request", 1);
+    next();
+  } catch (error) {
+    res.status(500).end("Something went wrong: maxTry");
+  }
+};
+
+module.exports = { authMiddleware, signupVlidation, loginVlidation, maxTry };
