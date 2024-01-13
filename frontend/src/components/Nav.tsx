@@ -30,7 +30,7 @@ const Nav = () => {
       </div>
       <div className="flex items-center space-x-2">
         <SearchBar />
-        {theme == "dark" ? (
+        {theme === "dark" ? (
           <Button size="icon" variant="ghost" onClick={() => setTheme("light")}>
             <SunIcon className="w-5 h-5" />
           </Button>

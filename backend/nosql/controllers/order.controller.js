@@ -1,5 +1,5 @@
 const { CART, ORDER } = require("../schemas/product.schema");
-const totalPrice = require("../utils/functions/totalPrice");
+const totalPrice = require("../utils/functions/total-price");
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 const { v4: uuid } = require("uuid");
 

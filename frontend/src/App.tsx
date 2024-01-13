@@ -13,6 +13,7 @@ import OrderHistory from "./pages/restricted/OrderHistory";
 import SearchedProduct from "./pages/SearchedProduct";
 import OrderConfirme from "./pages/restricted/OrderConfirme";
 import { useAuth } from "./context/AuthContext";
+import Footer from "./components/Footer";
 
 function App() {
   const { uid } = useAuth();
@@ -58,6 +59,7 @@ function App() {
               element={uid ? <OrderConfirme /> : <Navigate to="/" />}
             />
           </Routes>
+          <Footer />
         </ProductContextProvider>
         <Toaster />
       </ThemeProvider>
