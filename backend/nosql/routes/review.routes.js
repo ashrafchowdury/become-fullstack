@@ -6,11 +6,8 @@ const {
 } = require("../controllers/review.controller");
 const router = express.Router();
 
-// middlewares
-router.use(authMiddleware);
-
 // routes
 router.get("/:productId", getProductReview);
-router.post("/new-review", addProductReview);
+router.post("/new-review", authMiddleware, addProductReview);
 
 module.exports = router;

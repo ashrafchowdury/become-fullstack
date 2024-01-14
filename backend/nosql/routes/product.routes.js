@@ -6,12 +6,14 @@ const {
   deleteCartProduct,
   addNewProducts,
   searchProducts,
+  productRecomendation,
 } = require("../controllers/product.controller");
 const { authMiddleware } = require("../middlewares/auth.middleware");
 const router = express.Router();
 
 // Global Routes
 router.get("/all-products", getAllProducts);
+router.post("/recomendation", productRecomendation);
 router.get("/search", searchProducts);
 
 // Auth middleware

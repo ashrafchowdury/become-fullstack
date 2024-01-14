@@ -27,26 +27,6 @@ const addNewProducts = async (req, res) => {
   }
 };
 
-const searchProducts = async (req, res) => {
-  const keyword = req.query.keyword; // user searched keywords
-  try {
-    // Split the keyword into an array of words
-    const keywordsArray = keyword.split(/\s+/).filter(Boolean);
-    // Create an array of regular expressions for each keyword
-    const regexArray = keywordsArray.map((keyword) => new RegExp(keyword, "i"));
-    // Use $or to match any of the regular expressions
-    const products = await PRODUCTS.find({
-      $or: keywordsArray.map((keyword) => ({
-        name: { $regex: new RegExp(keyword, "i") },
-      })),
-    });
-
-    res.status(200).json(products);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-};
-
 // Carts functions
 const getCartProducts = async (req, res) => {
   const userId = req.user._id;
@@ -122,6 +102,58 @@ const deleteCartProduct = async (req, res) => {
   }
 };
 
+// recommendations
+const searchProducts = async (req, res) => {
+  const keyword = req.query.keyword; // user searched keywords
+  try {
+    // Split the keyword into an array of words
+    const keywordsArray = keyword.split(/\s+/).filter(Boolean);
+    // Create an array of regular expressions for each keyword
+    const regexArray = keywordsArray.map((keyword) => new RegExp(keyword, "i"));
+    // Use $or to match any of the regular expressions
+    const products = await PRODUCTS.find({
+      $or: keywordsArray.map((keyword) => ({
+        name: { $regex: new RegExp(keyword, "i") },
+      })),
+    });
+
+    res.status(200).json(products);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+const productRecomendation = async (req, res) => {
+  const { name: productName } = req.body; // user searched keywords
+
+  try {
+    if (!productName) {
+      throw new Error("Name not found for recomendation");
+    }
+
+    const recomendation = await PRODUCTS.find({
+      $and: [
+        { $text: { $search: productName } }, // mongoDB text search indexing
+        { name: { $ne: productName } }, // ($ne: not equal) avoid the current product
+      ],
+    }).limit(3);
+
+    // if any recomended product not found then pick three random products
+    if (recomendation.length === 0) {
+      const pickRandomProducts = await PRODUCTS.aggregate([
+        { $match: { name: { $ne: productName } } }, // ($ne: not equal) match the current product and avoid it
+        { $sample: { size: 3 } }, // give three random products
+      ]);
+      res.status(200).json(pickRandomProducts);
+      return;
+    }
+
+    res.status(200).json(recomendation);
+  } catch (error) {
+    res.status(500).end({ error: error.message });
+  }
+};
+
 module.exports = {
   getAllProducts,
   getCartProducts,
@@ -129,4 +161,5 @@ module.exports = {
   addNewProductToCart,
   deleteCartProduct,
   addNewProducts,
+  productRecomendation,
 };

@@ -1,6 +1,6 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Product from "../components/Product";
-import { useProduct } from "../context/ProductContext";
+import { useProduct, ProductType } from "../context/ProductContext";
 import { useLocation } from "react-router-dom";
 import { Button } from "../interfaces";
 import {
@@ -12,7 +12,6 @@ import {
 } from "lucide-react";
 import Avatar from "../components/Avatar";
 import axios from "axios";
-import { useAuth } from "../context/AuthContext";
 import { AuthUserType } from "../context/AuthContext";
 import { StarReview } from "../components/ReviewProduct";
 
@@ -25,36 +24,51 @@ type ProductReviewTypes = {
 };
 const Detaile = () => {
   const [productCounter, setProductCounter] = useState(1);
+  const [recomendation, setRecomendation] = useState<ProductType[]>([]);
   const [productReviews, setProductReviews] = useState<ProductReviewTypes[]>(
     []
   );
   const { products, addCartProduct } = useProduct();
   const route = useLocation();
   const productId = route.pathname.split("/")[2];
-  const { uid } = useAuth();
 
-  useEffect(() => {
-    const getProductReviews = async () => {
-      try {
-        const response = await axios.get(
-          `/api/v1/product/reviews/${productId}`,
-          {
-            headers: {
-              Authorization: `Bearer ${uid}`,
-            },
-          }
+  const getProductReviews = async () => {
+    try {
+      const response = await axios.get(`/api/v1/product/reviews/${productId}`);
+      setProductReviews(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const getRecomendedProducts = async () => {
+    try {
+      const productName = products.find((product) => product._id === productId)
+        ?.name;
+
+      if (productName) {
+        const response = await axios.post(
+          `/api/v1/products/recomendation`,
+          { name: productName },
+          {}
         );
-        setProductReviews(response.data);
-      } catch (error) {
-        console.log(error);
+        setRecomendation(response.data);
       }
-    };
-    uid && getProductReviews();
-  }, [uid]);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
+  const onLoadCapture = () => {
+    getRecomendedProducts();
+    getProductReviews();
+  };
   return (
     <>
-      <main className="flex flex-col md:flex-row md:px-0 md:gap-6 md:py-20 items-center md:justify-center lg:px-14 lg:gap-16">
+      <main
+        className="flex flex-col md:flex-row md:px-0 md:gap-6 md:py-20 items-center md:justify-center lg:px-14 lg:gap-16"
+        onLoadCapture={onLoadCapture}
+      >
         {products
           .filter((item) => productId == item._id)
           .map((item) => (
@@ -133,12 +147,9 @@ const Detaile = () => {
 
       <h2 className="font-bold text-2xl mt-24 mb-8">Related Prodcuts</h2>
       <section className="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8 !mb-12">
-        {products
-          .filter((item) => productId !== item._id)
-          .slice(0, 4)
-          .map((item) => (
-            <Product product={item} />
-          ))}
+        {recomendation.map((item) => (
+          <Product product={item} />
+        ))}
       </section>
 
       <h2 className="font-bold text-2xl mt-24 mb-8">Prodcut Reviews</h2>
