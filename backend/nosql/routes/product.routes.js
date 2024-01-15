@@ -14,7 +14,7 @@ const router = express.Router();
 // Global Routes
 router.get("/all-products", getAllProducts);
 router.post("/recomendation", productRecomendation);
-router.get("/search", searchProducts);
+router.post("/search", searchProducts);
 
 // Auth middleware
 router.use(authMiddleware);

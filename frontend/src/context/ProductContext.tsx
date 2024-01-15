@@ -81,14 +81,16 @@ const ProductContextProvider: React.FC<Children> = ({ children }: Children) => {
   const getSearchedProducts = async (query: string) => {
     if (query.length < 2) return;
     try {
-      const response = await axios.get(
-        `/api/v1/products/search?keyword=${query}`
+      const response = await axios.post(
+        "/api/v1/products/search",
+        { search: query },
+        {}
       );
-      if (response.status == 200) {
-        return response.data;
-      }
+
+      return response.data.length === 0 ? null : response.data;
     } catch (error) {
       console.log(error);
+      return null;
     }
   };
 

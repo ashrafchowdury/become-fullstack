@@ -104,27 +104,24 @@ const deleteCartProduct = async (req, res) => {
 
 // recommendations
 const searchProducts = async (req, res) => {
-  const keyword = req.query.keyword; // user searched keywords
+  const { search } = req.body;
   try {
-    // Split the keyword into an array of words
-    const keywordsArray = keyword.split(/\s+/).filter(Boolean);
-    // Create an array of regular expressions for each keyword
-    const regexArray = keywordsArray.map((keyword) => new RegExp(keyword, "i"));
-    // Use $or to match any of the regular expressions
-    const products = await PRODUCTS.find({
-      $or: keywordsArray.map((keyword) => ({
-        name: { $regex: new RegExp(keyword, "i") },
-      })),
+    if (!search) {
+      throw new Error("Name not found for recomendation");
+    }
+
+    const searchedProducts = await PRODUCTS.find({
+      $text: { $search: search }, // using mongoDB indexing to find the seached product quickly
     });
 
-    res.status(200).json(products);
+    res.status(200).json(searchedProducts);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.status(500).end({ error: error.message });
   }
 };
 
 const productRecomendation = async (req, res) => {
-  const { name: productName } = req.body; // user searched keywords
+  const { name: productName } = req.body;
 
   try {
     if (!productName) {
@@ -136,13 +133,13 @@ const productRecomendation = async (req, res) => {
         { $text: { $search: productName } }, // mongoDB text search indexing
         { name: { $ne: productName } }, // ($ne: not equal) avoid the current product
       ],
-    }).limit(3);
+    }).limit(4);
 
     // if any recomended product not found then pick three random products
     if (recomendation.length === 0) {
       const pickRandomProducts = await PRODUCTS.aggregate([
         { $match: { name: { $ne: productName } } }, // ($ne: not equal) match the current product and avoid it
-        { $sample: { size: 3 } }, // give three random products
+        { $sample: { size: 4 } }, // give three random products
       ]);
       res.status(200).json(pickRandomProducts);
       return;

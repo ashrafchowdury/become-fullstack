@@ -15,20 +15,17 @@ import { useProduct, ProductType } from "../context/ProductContext";
 
 const SearchBar = () => {
   const [searchQuery, setSearchQuery] = useState("");
-  const [searchProducts, setSearchProducts] = useState<ProductType[]>([]);
+  const [searchProducts, setSearchProducts] = useState<ProductType[] | null>();
   const { getSearchedProducts, setsSearchResult, products } = useProduct();
 
   const handleGetSearchResult = async () => {
     const data = await getSearchedProducts(searchQuery);
-    if (data.length > 0) {
-      setSearchProducts(data);
-    }
+    setSearchProducts(data);
   };
-  const viewProducts =
-    searchProducts.length > 0 ? searchProducts : products.slice(0, 3);
+
   return (
     <>
-      <Dialog onOpenChange={() => setSearchProducts([])}>
+      <Dialog onOpenChange={() => setSearchProducts(products.slice(0, 3))}>
         <DialogTrigger asChild>
           <Button size="icon" className="w-10 h-10" variant="ghost">
             <SearchIcon className="w-5 h-5" />
@@ -54,7 +51,7 @@ const SearchBar = () => {
           <DialogFooter className="!block">
             <p className="opacity-70 mb-3 text-sm">Search Result</p>
             <section className="flex flex-col">
-              {viewProducts.map((item) => (
+              {searchProducts?.map((item) => (
                 <Link
                   to={`/product/search/${searchQuery}/${item._id}`}
                   onClick={() => setsSearchResult(searchProducts)}
@@ -81,6 +78,12 @@ const SearchBar = () => {
                   </DialogClose>
                 </Link>
               ))}
+
+              {searchProducts === null && (
+                <p className="text-normal my-20 mx-auto">
+                  Searched product not found!
+                </p>
+              )}
             </section>
           </DialogFooter>
         </DialogContent>
