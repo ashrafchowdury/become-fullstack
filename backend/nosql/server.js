@@ -27,6 +27,6 @@ app.use("/api/v1/order", orderRoute);
 app.use(errorMiddleware);
 app.use(globalErrorMiddleware);
 
-module.exports = app;
-
 app.listen(5000, () => console.log("Server Connected..."));
+
+module.exports = app;

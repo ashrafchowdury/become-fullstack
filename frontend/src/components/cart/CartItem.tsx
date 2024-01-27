@@ -16,7 +16,7 @@ const CartItem = ({
     <div key={item.product._id} className={cn("flex", className)}>
       <div className="h-16 w-18 flex-shrink-0 overflow-hidden rounded-md border">
         <img
-          src={item.product.imageSrc}
+          src={item.product.image}
           className="h-full w-full object-cover object-center"
         />
       </div>

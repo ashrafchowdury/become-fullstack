@@ -86,7 +86,7 @@ const OrderHistory = () => {
                 <div className="px-10" key={value._id}>
                   <div className="flex">
                     <img
-                      src={value.product?.imageSrc}
+                      src={value.product?.image}
                       alt="image"
                       className="w-40 h-40 rounded-lg mr-4"
                     />

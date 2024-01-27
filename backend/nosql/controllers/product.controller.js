@@ -5,7 +5,7 @@ const client = require("../libs/redis");
 const getAllProducts = async (req, res) => {
   try {
     const cacheValue = await client.call("JSON.GET", "all-products");
-    if (cacheValue) {
+    if (JSON.parse(cacheValue).length > 0) {
       res.status(200).json(JSON.parse(cacheValue));
       return;
     }
@@ -23,7 +23,7 @@ const addNewProducts = async (req, res) => {
     const data = await PRODUCTS.create({ ...product });
     res.status(201).json(data);
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    res.status(500).end({ message: "Failed to add new product" });
   }
 };
 

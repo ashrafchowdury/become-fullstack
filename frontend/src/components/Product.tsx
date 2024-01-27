@@ -10,7 +10,7 @@ const Product = ({ product }: { product: ProductType }) => {
     >
       <div className=" sm:w-[200px] md:w-[228px] lg:w-[312px] xl:w-[283px] sm:h-[200px] md:h-[228px] lg:h-[312px] xl:h-[283px] overflow-hidden rounded-lg">
         <img
-          src={product.imageSrc}
+          src={product.image}
           alt={product.name}
           className="h-full w-full object-cover object-center group-hover:opacity-75"
         />

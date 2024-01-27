@@ -6,11 +6,13 @@ import { useAuth } from "./AuthContext";
 // Types
 export type ProductType = {
   name: string;
-  price: string;
-  imageSrc: string;
+  price: number;
+  image: string;
   description?: string;
   _id?: string;
   quantity?: number;
+  cetagory: string;
+  keywords: string[];
 };
 type ProductContextType = {
   products: ProductType[];
@@ -24,7 +26,7 @@ type ProductContextType = {
   deleteCartProduct: (id: string) => void;
   addNewProduct: ({
     name,
-    imageSrc,
+    image,
     description,
     price,
   }: ProductType) => Promise<number | undefined>;
@@ -56,24 +58,34 @@ const ProductContextProvider: React.FC<Children> = ({ children }: Children) => {
   // Add New Products
   const addNewProduct = async ({
     name,
-    imageSrc,
+    image,
     description,
     price,
+    cetagory,
+    keywords,
   }: ProductType) => {
-    if (!name || !imageSrc || !description || !price || price == "0") {
+    if (!name || !image || !description || !price || !cetagory || !keywords) {
       toast({ title: "Please Fill All The Fildes", variant: "destructive" });
     } else {
       try {
-        const data = { name, imageSrc, price };
-        const response = await axios.post(`/api/products/add-product/`, data, {
-          headers: {
-            Authorization: `Bearer ${uid}`,
-          },
-        });
+        const data = { name, image, description, price, cetagory, keywords };
+        const response = await axios.post(
+          `/api/v1/products/add-product`,
+          data,
+          {
+            headers: {
+              Authorization: `Bearer ${uid}`,
+            },
+          }
+        );
+        console.log("response", response);
         return response.status;
       } catch (error) {
         console.log(error);
-        toast({ title: "Something Went Wrong!", variant: "destructive" });
+        toast({
+          title: "Something Went Wrong! Failed to add new product",
+          variant: "destructive",
+        });
       }
     }
   };
@@ -105,10 +117,6 @@ const ProductContextProvider: React.FC<Children> = ({ children }: Children) => {
       response.status == 200 && setCart(response.data.products);
     } catch (error) {
       console.log(error);
-      toast({
-        title: "Something went wrong. Can't load the cart products",
-        variant: "destructive",
-      });
     }
   };
 

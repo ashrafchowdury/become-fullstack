@@ -3,9 +3,11 @@ const mongoose = require("mongoose");
 // We'er using mongoose to create schema for MongoDB
 const productSchema = new mongoose.Schema({
   name: { type: String, required: true },
-  price: { type: String, required: true },
-  imageSrc: { type: String, required: true },
+  price: { type: Number, required: true },
+  image: { type: String, required: true },
   description: { type: String, required: true },
+  cetagory: { type: String, required: true },
+  keywords: { type: Array, required: true },
 });
 
 const cartSchema = new mongoose.Schema({

@@ -74,7 +74,7 @@ const Detaile = () => {
           .map((item) => (
             <>
               <div className="relative md:w-full md:max-w-[500px]">
-                <img src={item.imageSrc} className=" rounded-xl" />
+                <img src={item.image} className=" rounded-xl" />
               </div>
               <section className="flex flex-col p-6 gap-3 md:w-full md:max-w-[600px]">
                 <div>
@@ -95,7 +95,7 @@ const Detaile = () => {
                   <div className="flex items-center justify-between md:flex-col md:items-start">
                     <div className="flex gap-4 items-center">
                       <span className="font-bold text-2xl">
-                        ${Number(item.price.substring(1)) / 2}
+                        ${item.price / 2}
                       </span>
                       <span className="font-bold text-sm">50%</span>
                     </div>
