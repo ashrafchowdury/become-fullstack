@@ -116,7 +116,7 @@ const searchProducts = async (req, res) => {
 
     res.status(200).json(searchedProducts);
   } catch (error) {
-    res.status(500).end({ error: error.message });
+    res.status(500).json({ error: error.message });
   }
 };
 
@@ -147,7 +147,7 @@ const productRecomendation = async (req, res) => {
 
     res.status(200).json(recomendation);
   } catch (error) {
-    res.status(500).end({ error: error.message });
+    res.status(500).json({ error: error.message });
   }
 };
 

@@ -1,15 +1,31 @@
-const app = require("../../../server");
-const client = require("../../../libs/redis");
+const app = require("../../../app");
 const request = require("supertest");
-const mongoose = require("mongoose");
+const { connect, disconnect } = require("../../utils/db-connection");
 
-describe("Test Product Recomendations", (done) => {
-  test("Product recomendations", () => {
+beforeAll(async () => {
+  await connect();
+});
+afterAll(async () => {
+  await disconnect();
+});
+
+describe("Recomendations", () => {
+  test("Product recommendations", (done) => {
     request(app)
       .post("/api/v1/products/recomendation")
-      .send({ name: "Leather card" })
-      .then((response) => {
-        expect(response.status).toBe(200);
+      .send({ name: "Stationary Boxes" })
+      .then((res) => {
+        expect(res.status).toEqual(200);
+        done();
+      })
+      .catch((err) => done(err));
+  });
+  test("Search Products Result", (done) => {
+    request(app)
+      .post("/api/v1/products/search")
+      .send({ search: "stationary" })
+      .then((res) => {
+        expect(res.status).toBe(200);
         done();
       })
       .catch((err) => done(err));

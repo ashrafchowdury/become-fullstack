@@ -1,26 +1,20 @@
-const app = require("../../../server");
-const client = require("../../../libs/redis");
+const app = require("../../../app");
 const request = require("supertest");
-const mongoose = require("mongoose");
+const { connect, disconnect } = require("../../utils/db-connection");
 
 beforeAll(async () => {
-  await mongoose.connect("mongodb://localhost:27017/grocery", {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  });
+  await connect();
 });
-
 afterAll(async () => {
-  await mongoose.connection.close();
-  client.disconnect();
+  await disconnect();
 });
 
 test("Get ALL Products", (done) => {
   request(app)
     .get("/api/v1/products/all-products")
-    .then((response) => {
-      expect(response.status).toEqual(200);
+    .then((res) => {
+      expect(res.status).toEqual(200);
       done();
     })
-    .catch((error) => done(error));
+    .catch((err) => done(err));
 });
