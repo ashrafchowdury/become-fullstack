@@ -1,32 +1,14 @@
-const express = require("express");
-const app = express();
-const authRoute = require("./routes/auth.routes");
-const productRoute = require("./routes/product.routes");
-const orderRoute = require("./routes/order.routes");
-const reviewRoute = require("./routes/review.routes");
-const {
-  errorMiddleware,
-  globalErrorMiddleware,
-} = require("./middlewares/error.middleware");
-const helmet = require("helmet");
-require("./database/index");
+const app = require("./app");
 require("dotenv").config();
+const database = require("./database/index");
 
-// middlewares
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-app.use(helmet());
+const PORT = process.env.PORT || 5000;
 
-// routes
-app.use("/api/v1/auth", authRoute);
-app.use("/api/v1/products", productRoute);
-app.use("/api/v1/product/reviews", reviewRoute);
-app.use("/api/v1/order", orderRoute);
-
-// error middleware
-app.use(errorMiddleware);
-app.use(globalErrorMiddleware);
-
-app.listen(5000, () => console.log("Server Connected..."));
-
-module.exports = app;
+database()
+  .then(() => {
+    console.log("databse has listening and connected");
+    app.listen(PORT, () => console.log("Server Connected..."));
+  })
+  .catch((err) => {
+    console.log("Databse has crashed", err);
+  });
